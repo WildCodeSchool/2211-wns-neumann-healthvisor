@@ -2,7 +2,6 @@ query Users {
   users {
     id
     email
-    password
     premium
   }
 }
