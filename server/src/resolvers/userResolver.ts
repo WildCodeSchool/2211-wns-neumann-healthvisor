@@ -1,6 +1,7 @@
 import { Resolver, Query, Mutation, Arg } from "type-graphql";
 import datasource from "../db";
-import User, { UserInput } from "../entity/User";
+import User, { hashPassword, UserInput, LoginInput, verifyPassword } from "../entity/User";
+import { ApolloError } from "apollo-server-errors";
 
 @Resolver(User)
 export class UserResolver {
@@ -12,7 +13,22 @@ export class UserResolver {
   }
 
   @Mutation(() => User)
-  async createUser(@Arg("data") data: UserInput): Promise<User> {
-    return await datasource.getRepository(User).save(data);
+  async createUser(@Arg("data") { email, password, premium }: UserInput): Promise<User> {
+
+    const passwordHashed = await hashPassword(password);
+    console.log({ email, passwordHashed });
+    
+    return await datasource.getRepository(User).save({ email, password: passwordHashed, premium });
+  }
+
+  @Mutation(() => Boolean)
+  async loginUser(@Arg("data") { email, password }: LoginInput): Promise<boolean> {
+
+    const user = await datasource.getRepository(User).findOneBy({ email });
+    
+
+    if(user === null || !(await verifyPassword(user.password, password))) throw new ApolloError('Données incorrectes', "DONNEES_INCORRECT");
+    
+    return true;
   }
 }
