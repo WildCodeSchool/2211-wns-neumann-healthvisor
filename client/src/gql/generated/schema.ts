@@ -61,7 +61,6 @@ export type User = {
   __typename?: 'User';
   email: Scalars['String'];
   id: Scalars['Float'];
-  password: Scalars['String'];
   premium: Scalars['Boolean'];
 };
 
@@ -76,12 +75,12 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: number, email: string, password: string, premium: boolean } };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: number, email: string, premium: boolean } };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: number, email: string, password: string, premium: boolean }> };
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: number, email: string, premium: boolean }> };
 
 
 export const CreateUserDocument = gql`
@@ -89,7 +88,6 @@ export const CreateUserDocument = gql`
   createUser(data: $data) {
     id
     email
-    password
     premium
   }
 }
@@ -125,7 +123,6 @@ export const UsersDocument = gql`
   users {
     id
     email
-    password
     premium
   }
 }
