@@ -6,13 +6,15 @@ const Dashboard = () => {
   const users = data?.users || [];
 
   console.log(errorUsers, loadingUsers);
- // const [users, { loading: processing }] = useUsersQuery();
- const usersList = users.map((u) => {
-  return <div>{u.email}</div>
+
+  const usersList = users.map((u) => {
+  return <div key={u.id}>{u.email}</div>
  })
   return (
     <Fragment>
       {loadingUsers? "Chargement":usersList}
+      <div>test</div>
+
     </Fragment>
   )
   

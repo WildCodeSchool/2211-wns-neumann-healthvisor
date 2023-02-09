@@ -1,7 +1,6 @@
 mutation CreateUser($data: UserInput!) {
   createUser(data: $data) {
-    id
     email
-    premium
+    id
   }
 }
