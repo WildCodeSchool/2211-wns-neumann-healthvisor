@@ -1,7 +1,7 @@
 import { Field, ObjectType, InputType } from "type-graphql";
 import { MaxLength, MinLength, IsEmail, IsNotEmpty } from "class-validator";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { hash, verify } from "argon2";
+import { argon2id, hash, verify } from "argon2";
 
 @ObjectType()
 @Entity()
@@ -18,9 +18,16 @@ class User {
   @Column({ length: 200 })
   password: string;
 
-  @Field()
-  @Column()
+  @Field({ defaultValue: false })
+  @Column({ default: false })
   premium: boolean;
+
+  @Field({ defaultValue: 0})
+  @Column({ 
+    nullable: false,
+    default: 0
+  })
+  role: number;
 }
 
 @InputType()
@@ -34,9 +41,6 @@ export class UserInput {
   @MaxLength(200)
   @MinLength(8)
   password: string;
-
-  @Field()
-  premium: boolean;
 }
 
 @InputType()
@@ -53,6 +57,7 @@ export class LoginInput {
 }
 
 const hashOptions =  {
+  type: argon2id,
   memoryCost: 2 **16
 }
 
