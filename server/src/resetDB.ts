@@ -6,7 +6,7 @@ const reset = async (): Promise<void> => {
     await datasource.getRepository(User).delete({});
     await datasource.getRepository(User).save({
         email: "test0@test.fr",
-        hashedPassword: await hashPassword("test0000")
+        password: await hashPassword("test0000")
     });
 
     await datasource.destroy();

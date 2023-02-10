@@ -50,8 +50,6 @@ async function start(): Promise<void> {
       return false;
     },
   });
-
-  console.log(env.CORS_ALLOWED_ORIGINS);
   
 
   const server = new ApolloServer({
@@ -61,7 +59,7 @@ async function start(): Promise<void> {
     plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
     context: ({ req, res }) => ({ req, res }),
     cors: {
-      origin: env.CORS_ALLOWED_ORIGINS,
+      origin: env.CORS_ALLOWED_ORIGINS.split(","),
       credentials: true
     },
   });

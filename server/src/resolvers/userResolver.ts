@@ -44,6 +44,12 @@ export class UserResolver {
     return token;
   }
 
+  @Mutation(() => Boolean)
+  async logoutUser(@Ctx() { res }: ContextType): Promise<boolean> {
+    res.clearCookie("token");
+    return true;
+  }
+
   @Authorized()
   @Query(() => User)
   async profile(@Ctx() { currentUser }: ContextType): Promise<User> {
