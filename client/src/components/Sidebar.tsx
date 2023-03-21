@@ -1,5 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { useQuery } from '@apollo/client';
+import React, { Fragment } from 'react';
 import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
@@ -8,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import ContactIcon from '@mui/icons-material/ContactSupport';
-import { useFetchUserByIdQuery, UsersDocument } from '../gql/generated/schema';
+import { useGetProfileQuery } from '../gql/generated/schema';
 
 interface SidebarProps {
   open: boolean;
@@ -17,8 +16,9 @@ interface SidebarProps {
 
 function Sidebar(props: SidebarProps) {
   const { open, onClose } = props;
-  const { data } = useFetchUserByIdQuery({ variables: { id : 14 }})
-  const currentUser = data?.fetchUserById;
+  const { data: currentUser } = useGetProfileQuery({
+    errorPolicy: "ignore",
+  });
 
   return (
     <Fragment>
@@ -56,7 +56,7 @@ function Sidebar(props: SidebarProps) {
           </ListItem>
            {currentUser && (
             <ListItem button onClick={onClose}>
-              <ListItemText primary={`Welcome, ${currentUser.role}`} />
+              <ListItemText primary={`Welcome, ${currentUser.profile.role}`} />
             </ListItem>
           )}
         </List>
