@@ -15,6 +15,10 @@ export type Scalars = {
   Float: number;
 };
 
+export type FetchInput = {
+  id: Scalars['Float'];
+};
+
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -35,7 +39,7 @@ export type MutationCreatePageArgs = {
 
 
 export type MutationCreateUserArgs = {
-  data: UserInput;
+  data: SigninInput;
 };
 
 
@@ -62,8 +66,19 @@ export type PageInput = {
 export type Query = {
   __typename?: 'Query';
   Page: Array<Page>;
+  fetchUserById: User;
   profile: User;
   users: Array<User>;
+};
+
+
+export type QueryFetchUserByIdArgs = {
+  id: Scalars['Int'];
+};
+
+export type SigninInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type User = {
@@ -74,17 +89,19 @@ export type User = {
   role?: Maybe<Scalars['Float']>;
 };
 
-export type UserInput = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
 export type CreateUserMutationVariables = Exact<{
-  data: UserInput;
+  data: SigninInput;
 }>;
 
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', email: string, id: number } };
+
+export type FetchUserByIdQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type FetchUserByIdQuery = { __typename?: 'Query', fetchUserById: { __typename?: 'User', email: string, id: number, premium?: boolean | null, role?: number | null } };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -100,7 +117,7 @@ export type LoginUserMutation = { __typename?: 'Mutation', loginUser: string };
 
 
 export const CreateUserDocument = gql`
-    mutation CreateUser($data: UserInput!) {
+    mutation CreateUser($data: SigninInput!) {
   createUser(data: $data) {
     email
     id
@@ -133,6 +150,44 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const FetchUserByIdDocument = gql`
+    query FetchUserById($id: Int!) {
+  fetchUserById(id: $id) {
+    email
+    id
+    premium
+    role
+  }
+}
+    `;
+
+/**
+ * __useFetchUserByIdQuery__
+ *
+ * To run a query within a React component, call `useFetchUserByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchUserByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchUserByIdQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useFetchUserByIdQuery(baseOptions: Apollo.QueryHookOptions<FetchUserByIdQuery, FetchUserByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchUserByIdQuery, FetchUserByIdQueryVariables>(FetchUserByIdDocument, options);
+      }
+export function useFetchUserByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchUserByIdQuery, FetchUserByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchUserByIdQuery, FetchUserByIdQueryVariables>(FetchUserByIdDocument, options);
+        }
+export type FetchUserByIdQueryHookResult = ReturnType<typeof useFetchUserByIdQuery>;
+export type FetchUserByIdLazyQueryHookResult = ReturnType<typeof useFetchUserByIdLazyQuery>;
+export type FetchUserByIdQueryResult = Apollo.QueryResult<FetchUserByIdQuery, FetchUserByIdQueryVariables>;
 export const UsersDocument = gql`
     query Users {
   users {
