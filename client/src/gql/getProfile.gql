@@ -1,0 +1,8 @@
+query getProfile {
+  profile {
+    email
+    id
+    premium
+    role
+  }
+}

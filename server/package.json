@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "start": "ts-node-dev --poll src/index.ts"
+    "start": "ts-node-dev --poll src/index.ts",
+    "resetDB": "ts-node-dev src/resetDB.ts"
   },
   "author": "",
   "license": "ISC",
