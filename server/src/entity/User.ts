@@ -15,7 +15,7 @@ class User {
   @Column({ length: 100 })
   email: string;
 
-  @Column({ length: 200 })
+  @Column({ length: 255 })
   password: string;
 
   @Field({ defaultValue: false })
@@ -31,14 +31,21 @@ class User {
 }
 
 @InputType()
-export class UserInput {
+export class FetchInput {
+  @Field()
+  @IsNotEmpty()
+  id: number;
+}
+
+@InputType()
+export class SigninInput {
   @Field()
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
   @Field()
-  @MaxLength(200)
+  @MaxLength(255)
   @MinLength(8)
   password: string;
 }

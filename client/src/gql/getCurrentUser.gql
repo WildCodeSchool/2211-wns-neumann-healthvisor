@@ -1,0 +1,8 @@
+query FetchUserById($id: Int!) {
+  fetchUserById(id: $id) {
+    email
+    id
+    premium
+    role
+  }
+}

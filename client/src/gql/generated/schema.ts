@@ -15,6 +15,10 @@ export type Scalars = {
   Float: number;
 };
 
+export type FetchInput = {
+  id: Scalars['Float'];
+};
+
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -36,7 +40,7 @@ export type MutationCreatePageArgs = {
 
 
 export type MutationCreateUserArgs = {
-  data: UserInput;
+  data: SigninInput;
 };
 
 
@@ -63,8 +67,19 @@ export type PageInput = {
 export type Query = {
   __typename?: 'Query';
   Page: Array<Page>;
+  fetchUserById: User;
   profile: User;
   users: Array<User>;
+};
+
+
+export type QueryFetchUserByIdArgs = {
+  id: Scalars['Int'];
+};
+
+export type SigninInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type User = {
@@ -75,13 +90,8 @@ export type User = {
   role?: Maybe<Scalars['Float']>;
 };
 
-export type UserInput = {
-  email: Scalars['String'];
-  password: Scalars['String'];
-};
-
 export type CreateUserMutationVariables = Exact<{
-  data: UserInput;
+  data: SigninInput;
 }>;
 
 
@@ -111,7 +121,7 @@ export type LogoutUserMutation = { __typename?: 'Mutation', logoutUser: boolean 
 
 
 export const CreateUserDocument = gql`
-    mutation CreateUser($data: UserInput!) {
+    mutation CreateUser($data: SigninInput!) {
   createUser(data: $data) {
     email
     id

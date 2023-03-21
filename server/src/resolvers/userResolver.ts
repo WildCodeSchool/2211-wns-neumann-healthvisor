@@ -1,6 +1,6 @@
-import { Resolver, Query, Mutation, Arg, Ctx, Authorized } from "type-graphql";
+import { Resolver, Query, Mutation, Arg, Ctx, Authorized, Int } from "type-graphql";
 import datasource from "../db";
-import User, { hashPassword, UserInput, LoginInput, verifyPassword } from "../entity/User";
+import User, { hashPassword, SigninInput, LoginInput, verifyPassword } from "../entity/User";
 import { ApolloError } from "apollo-server-errors";
 import { ContextType } from '../index';
 import { env } from "../env";
@@ -15,8 +15,18 @@ export class UserResolver {
     return users;
   }
 
+  @Query(() => User)
+  async fetchUserById(@Arg("id",()=>Int) id : number): Promise<User> {
+
+    const existingUser = await datasource.getRepository(User).findOneBy({ id });
+   
+    if(existingUser == null) throw new ApolloError('User does not exist', 'USER_NOT_EXIST');
+    
+    return existingUser;
+  }
+
   @Mutation(() => User)
-  async createUser(@Arg("data") { email, password }: UserInput): Promise<User> {
+  async createUser(@Arg("data") { email, password }: SigninInput): Promise<User> {
 
     const existingUser = await datasource.getRepository(User).findOneBy({ email });
    
