@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import Sidebar from "../components/Sidebar";
+import Sidebar from "../components/Sidebar/Sidebar";
 import { useUsersQuery } from "../gql/generated/schema";
 
 const Dashboard = () => {

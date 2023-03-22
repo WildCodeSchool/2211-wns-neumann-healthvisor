@@ -14,7 +14,7 @@ import {
 import {
   useLoginUserMutation,
   useGetProfileQuery,
-} from "../gql/generated/schema";
+} from "../../gql/generated/schema";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 interface LoginComponentProps {

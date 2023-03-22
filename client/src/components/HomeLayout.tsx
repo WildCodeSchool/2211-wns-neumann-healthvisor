@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import React, { Fragment, ReactNode } from "react";
-import HomeHeader from "./HomeHeader";
+import HomeHeader from "./HomeHeader/HomeHeader";
 
 interface LayoutProps {
   children: ReactNode;

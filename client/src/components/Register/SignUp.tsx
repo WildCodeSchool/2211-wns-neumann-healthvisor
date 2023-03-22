@@ -1,21 +1,17 @@
 import React, { FormEvent, useState } from "react";
 import {
   Container,
-  Checkbox,
-  FormControlLabel,
   TextField,
   Button,
   Box,
   Typography,
-  Grid,
   Avatar,
-  Link,
 } from "@mui/material";
 import {
   useLoginUserMutation,
   useGetProfileQuery,
   useCreateUserMutation,
-} from "../gql/generated/schema";
+} from "../../gql/generated/schema";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 interface SignUpComponentProps {

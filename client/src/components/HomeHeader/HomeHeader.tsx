@@ -13,14 +13,14 @@ import LoginIcon from "@mui/icons-material/Login";
 import AppRegistrationIcon from "@mui/icons-material/AppRegistration";
 import LogoutIcon from "@mui/icons-material/Logout";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import Login from "./Login";
+import Login from "../Login/Login";
 import {
   useGetProfileQuery,
   useLogoutUserMutation,
-} from "../gql/generated/schema";
+} from "../../gql/generated/schema";
 import { useNavigate } from "react-router-dom";
-import SignUp from "./SignUp";
-import logo from "../assets/img/logo.png";
+import SignUp from "../Register/SignUp";
+import logo from "../../assets/images/logo.png";
 
 const HomeHeader = () => {
   const navigate = useNavigate();
