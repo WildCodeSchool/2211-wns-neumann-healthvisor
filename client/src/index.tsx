@@ -15,7 +15,7 @@ import {
 } from 'react-router-dom';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
-import Sidebar from './components/Sidebar';
+import Sidebar from './components/Sidebar/Sidebar';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

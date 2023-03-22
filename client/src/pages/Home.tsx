@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
-import Login from "../components/Login";
-import HomeHeader from "../components/HomeHeader";
+import Login from "../components/Login/Login";
+import HomeHeader from "../components/HomeHeader/HomeHeader";
 
 const Home = () => {
     return (
