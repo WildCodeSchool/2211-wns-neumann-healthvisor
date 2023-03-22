@@ -1,6 +1,6 @@
 import React, { FormEvent, useState } from 'react';
 import { FormControl, InputLabel, Input, FormHelperText, Button } from '@mui/material';
-import { useLoginUserMutation, useGetProfileQuery, useLogoutUserMutation } from '../gql/generated/schema';
+import { useLoginUserMutation, useGetProfileQuery, useLogoutUserMutation } from '../../gql/generated/schema';
 
 const Login = () => {
     const [email, setEmail] = useState('');

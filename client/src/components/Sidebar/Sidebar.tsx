@@ -7,7 +7,8 @@ import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import InfoIcon from '@mui/icons-material/Info';
 import ContactIcon from '@mui/icons-material/ContactSupport';
-import { useGetProfileQuery } from '../gql/generated/schema';
+import { useGetProfileQuery } from '../../gql/generated/schema';
+import './Sidebar.scss';
 
 interface SidebarProps {
   open: boolean;
@@ -36,10 +37,10 @@ function Sidebar(props: SidebarProps) {
         onClose={onClose}
       >
         <List>
+          <ListItem className="centered" onClick={onClose}>
+            <ListItemIcon className="large-logo" />
+          </ListItem>
           <ListItem button onClick={onClose}>
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
           <ListItem button onClick={onClose}>

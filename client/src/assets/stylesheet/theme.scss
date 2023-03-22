@@ -1,0 +1,14 @@
+$logo-image: url('../../assets/images/logo.png');
+
+.large-logo {
+    background-image: $logo-image;
+    background-repeat: no-repeat;
+    background-size: contain;
+    height: 70px;
+    width: 100px;
+  }
+
+  .centered {
+    justify-content: center !important;
+    align-items: center !important;
+  }
