@@ -1,30 +1,30 @@
 import React, { FormEvent, useState } from "react";
 import {
   Container,
-  Checkbox,
-  FormControlLabel,
   TextField,
   Button,
   Box,
   Typography,
-  Grid,
   Avatar,
-  Link,
 } from "@mui/material";
 import {
   useLoginUserMutation,
   useGetProfileQuery,
+  useCreateUserMutation,
 } from "../../gql/generated/schema";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
-interface LoginComponentProps {
+interface SignUpComponentProps {
   isLogged: () => void;
 }
 
-const Login: React.FC<LoginComponentProps> = ({ isLogged }) => {
+const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [errorPassword, setErrorPassword] = useState(false);
 
+  const [createUser] = useCreateUserMutation();
   const [loginUser] = useLoginUserMutation();
   const { client } = useGetProfileQuery({
     errorPolicy: "ignore",
@@ -32,11 +32,22 @@ const Login: React.FC<LoginComponentProps> = ({ isLogged }) => {
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    await loginUser({ variables: { data: { email, password } } });
-    client.resetStore();
-    isLogged();
+    if (!errorPassword) {
+      await createUser({ variables: { data: { email, password } } });
+      await loginUser({ variables: { data: { email, password } } });
+      client.resetStore();
+      isLogged();
+    }
   };
 
+  const verifyPassword = (confirmedPassword: string) => {
+    setConfirmPassword(confirmedPassword);
+    if (password !== confirmPassword) {
+      setErrorPassword(true);
+    } else {
+      setErrorPassword(false);
+    }
+  };
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -51,7 +62,7 @@ const Login: React.FC<LoginComponentProps> = ({ isLogged }) => {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Connexion
+          Inscription
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
           <TextField
@@ -70,6 +81,7 @@ const Login: React.FC<LoginComponentProps> = ({ isLogged }) => {
             margin="normal"
             required
             fullWidth
+            inputProps={{ minLength: 8 }}
             name="password"
             label="Mot de passe"
             type="password"
@@ -78,9 +90,21 @@ const Login: React.FC<LoginComponentProps> = ({ isLogged }) => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Se souvenir de moi"
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            inputProps={{ minLength: 8 }}
+            error={errorPassword}
+            helperText={
+              errorPassword ? "Les mots de passes ne correspondent pas." : ""
+            }
+            name="confirmPassword"
+            label="Confirmation du mot de passe"
+            type="password"
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => verifyPassword(e.target.value)}
           />
           <Button
             type="submit"
@@ -88,24 +112,12 @@ const Login: React.FC<LoginComponentProps> = ({ isLogged }) => {
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
           >
-            Connexion
+            S'inscrire
           </Button>
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Mot de passe oublié?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link href="#" variant="body2">
-                {"Pas de compte? Enregistrez-vous"}
-              </Link>
-            </Grid>
-          </Grid>
         </Box>
       </Box>
     </Container>
   );
 };
 
-export default Login;
+export default SignUp;

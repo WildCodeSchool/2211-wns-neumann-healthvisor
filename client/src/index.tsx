@@ -5,7 +5,6 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import reportWebVitals from './reportWebVitals';
 import { ApolloProvider } from "@apollo/client";
 import apolloClient from "./gql/client";
 import {
@@ -15,7 +14,6 @@ import {
 } from 'react-router-dom';
 import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
-import Sidebar from './components/Sidebar/Sidebar';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -23,7 +21,6 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ApolloProvider client={apolloClient}>
-      <Sidebar open={true} onClose={() => {}} />
       <Router>
         <Routes>
           <Route path="/" element={<Home />} />
