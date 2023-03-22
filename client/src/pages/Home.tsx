@@ -1,15 +1,12 @@
-import React, { Fragment } from 'react';
-import Login from "../components/Login/Login";
-import HomeHeader from "../components/HomeHeader/HomeHeader";
+import React from "react";
+import HomeLayout from "../components/HomeLayout";
 
 const Home = () => {
-    return (
-      <Fragment>
-        <HomeHeader />
-        <h1>Home</h1>
-        <Login />
-      </Fragment>
-    )
-}
+  return (
+    <HomeLayout>
+      <div>test</div>
+    </HomeLayout>
+  );
+};
 
-export default Home
+export default Home;
