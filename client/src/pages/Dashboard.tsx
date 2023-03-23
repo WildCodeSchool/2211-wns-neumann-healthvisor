@@ -1,5 +1,5 @@
 import React, { Fragment } from "react";
-import Sidebar from "../components/Sidebar/Sidebar";
+import AppLayout from "../components/AppLayout/AppLayout";
 import { useUsersQuery } from "../gql/generated/schema";
 
 const Dashboard = () => {
@@ -12,11 +12,12 @@ const Dashboard = () => {
     return <div key={u.id}>{u.email}</div>;
   });
   return (
-    <Fragment>
-      <Sidebar open={true} onClose={() => {}} />
-      {loadingUsers ? "Chargement" : usersList}
-      <div>test</div>
-    </Fragment>
+    <AppLayout>
+      <Fragment>
+        {loadingUsers ? "Chargement" : usersList}
+        <div></div>
+      </Fragment>
+    </AppLayout>
   );
 };
 

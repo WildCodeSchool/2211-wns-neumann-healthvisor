@@ -4,15 +4,17 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import HomeIcon from '@mui/icons-material/Home';
-import InfoIcon from '@mui/icons-material/Info';
-import ContactIcon from '@mui/icons-material/ContactSupport';
+import DeveloperBoardRoundedIcon from '@mui/icons-material/DeveloperBoardRounded';
+import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { useGetProfileQuery } from '../../gql/generated/schema';
 import './Sidebar.scss';
+import { Link } from 'react-router-dom';
 
 interface SidebarProps {
   open: boolean;
   onClose: () => void;
+  className?: string;
 }
 
 function Sidebar(props: SidebarProps) {
@@ -37,23 +39,26 @@ function Sidebar(props: SidebarProps) {
         onClose={onClose}
       >
         <List>
-          <ListItem className="centered" onClick={onClose}>
+          <ListItem className="centered" component={Link} to="/" onClick={onClose}>
             <ListItemIcon className="large-logo" />
           </ListItem>
-          <ListItem button onClick={onClose}>
-            <ListItemText primary="Home" />
+          <ListItem button component={Link} to="/dashboard" onClick={onClose}>
+            <ListItemIcon>
+              <DeveloperBoardRoundedIcon />
+            </ListItemIcon>
+            <ListItemText primary="Mes Pages" />
           </ListItem>
           <ListItem button onClick={onClose}>
             <ListItemIcon>
-              <InfoIcon />
+              <AccountBoxRoundedIcon />
             </ListItemIcon>
-            <ListItemText primary="About" />
+            <ListItemText primary="Profle" />
           </ListItem>
           <ListItem button onClick={onClose}>
             <ListItemIcon>
-              <ContactIcon />
+              <LogoutRoundedIcon />
             </ListItemIcon>
-            <ListItemText primary="Contact" />
+            <ListItemText primary="Déconnection" />
           </ListItem>
            {currentUser && (
             <ListItem button onClick={onClose}>
