@@ -1,7 +1,8 @@
 import { Field, ObjectType, InputType } from "type-graphql";
 import { MaxLength, MinLength, IsEmail, IsNotEmpty } from "class-validator";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { argon2id, hash, verify } from "argon2";
+import Page from "./Page";
 
 @ObjectType()
 @Entity()
@@ -28,6 +29,10 @@ class User {
     default: 0
   })
   role: number;
+
+  @ManyToMany(() => Page, page => page.users)
+  @JoinTable()
+  pages: Page[];
 }
 
 @InputType()

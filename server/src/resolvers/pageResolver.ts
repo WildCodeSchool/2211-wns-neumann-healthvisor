@@ -5,6 +5,7 @@ import axios from 'axios';
 import { ApolloError } from "apollo-server-errors";
 import puppeteer from "puppeteer";
 import { join } from "path";
+import User from "../entity/User";
 
 @Resolver(Page)
 export class PageResolver {

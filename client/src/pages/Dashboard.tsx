@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
 import AppLayout from "../components/AppLayout/AppLayout";
-import { useUsersQuery } from "../gql/generated/schema";
+import UserPage from "../components/UserPage/UserPage";
+import { useFetchUserByIdQuery, useUsersQuery } from "../gql/generated/schema";
 
 const Dashboard = () => {
   const { error: errorUsers, loading: loadingUsers, data } = useUsersQuery();
@@ -11,11 +12,13 @@ const Dashboard = () => {
   const usersList = users.map((u) => {
     return <div key={u.id}>{u.email}</div>;
   });
+
   return (
     <AppLayout>
       <Fragment>
         {loadingUsers ? "Chargement" : usersList}
         <div></div>
+        <UserPage id={1} />
       </Fragment>
     </AppLayout>
   );

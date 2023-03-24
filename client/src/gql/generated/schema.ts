@@ -68,12 +68,18 @@ export type Query = {
   __typename?: 'Query';
   Page: Array<Page>;
   fetchUserById: User;
+  getUserPages: Array<Page>;
   profile: User;
   users: Array<User>;
 };
 
 
 export type QueryFetchUserByIdArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryGetUserPagesArgs = {
   id: Scalars['Int'];
 };
 
@@ -108,6 +114,13 @@ export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', email: string, id: number, premium?: boolean | null, role?: number | null } };
+
+export type GetUserPagesQueryVariables = Exact<{
+  id: Scalars['Int'];
+}>;
+
+
+export type GetUserPagesQuery = { __typename?: 'Query', getUserPages: Array<{ __typename?: 'Page', id: number, intervale: number, url: string }> };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -236,6 +249,43 @@ export function useGetProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions
 export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
 export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
 export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
+export const GetUserPagesDocument = gql`
+    query GetUserPages($id: Int!) {
+  getUserPages(id: $id) {
+    id
+    intervale
+    url
+  }
+}
+    `;
+
+/**
+ * __useGetUserPagesQuery__
+ *
+ * To run a query within a React component, call `useGetUserPagesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetUserPagesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetUserPagesQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useGetUserPagesQuery(baseOptions: Apollo.QueryHookOptions<GetUserPagesQuery, GetUserPagesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetUserPagesQuery, GetUserPagesQueryVariables>(GetUserPagesDocument, options);
+      }
+export function useGetUserPagesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetUserPagesQuery, GetUserPagesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetUserPagesQuery, GetUserPagesQueryVariables>(GetUserPagesDocument, options);
+        }
+export type GetUserPagesQueryHookResult = ReturnType<typeof useGetUserPagesQuery>;
+export type GetUserPagesLazyQueryHookResult = ReturnType<typeof useGetUserPagesLazyQuery>;
+export type GetUserPagesQueryResult = Apollo.QueryResult<GetUserPagesQuery, GetUserPagesQueryVariables>;
 export const UsersDocument = gql`
     query Users {
   users {
