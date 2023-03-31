@@ -24,6 +24,11 @@ export class PageResolver {
 
   @Mutation(() => Page)
   async getPage(@Arg("data") { url }: PageInput): Promise<Page> {
+    const regexHTTP =
+      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+    if (!url || !regexHTTP.test(url))
+      throw new ApolloError("URL not valid", "URL_NOT_VALID");
+
     const startTime = Date.now();
     const axiosResult = await axios
       .get(url)
@@ -77,7 +82,7 @@ export class PageResolver {
     const newPage = await datasource.getRepository(Page).save({ url: url });
     console.log(axiosResult);
 
-    await datasource.getRepository(History).save({
+    const history = await datasource.getRepository(History).save({
       status: axiosResult.status,
       date: new Date(),
       responseTime: axiosResult.responseTime,

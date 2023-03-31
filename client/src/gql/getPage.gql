@@ -1,0 +1,7 @@
+mutation GetPage($data: PageInput!) {
+  getPage(data: $data) {
+    id
+    intervale
+    url
+  }
+}

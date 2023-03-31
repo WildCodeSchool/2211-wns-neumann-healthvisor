@@ -37,6 +37,9 @@ class History {
 @InputType()
 export class HistoryInput {
   @Field()
+  id: number;
+
+  @Field()
   @MaxLength(3)
   @MinLength(3)
   status: string;
@@ -49,6 +52,9 @@ export class HistoryInput {
   @Field()
   @Column()
   responseTime: number
+
+  @Field()
+  page: number;
 }
 
 export default History;
