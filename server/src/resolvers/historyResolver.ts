@@ -9,7 +9,11 @@ import Page from "../entity/Page";
 export class HistoryResolver {
   @Query(() => [History])
   async History(): Promise<History[]> {
-    const pages = await datasource.getRepository(History).find();
+    const pages = await datasource.getRepository(History).find({
+      relations: {
+        page: true
+      }
+    });
 
     return pages;
   }

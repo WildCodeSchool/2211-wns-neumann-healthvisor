@@ -54,13 +54,6 @@ async function start(): Promise<void> {
 
   const app = express();
 
-  // app.use(
-  //   cors({
-  //     origin: env.CORS_ALLOWED_ORIGINS.split(","),
-  //     credentials: true,
-  //   })
-  // );
-
   const server = new ApolloServer({
     schema,
     csrfPrevention: true,
@@ -74,8 +67,8 @@ async function start(): Promise<void> {
   server.applyMiddleware({
     app,
     cors: {
-      origin: true,
-      // origin: env.CORS_ALLOWED_ORIGINS.split(","),
+      // origin: true,
+      origin: env.CORS_ALLOWED_ORIGINS.split(","),
       credentials: true
     },
   });

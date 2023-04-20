@@ -46,7 +46,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createPage: Page;
   createUser: User;
-  getPage: Page;
+  getPage: History;
   loginUser: Scalars['String'];
   logoutUser: Scalars['Boolean'];
 };
@@ -154,7 +154,7 @@ export type GetPageMutationVariables = Exact<{
 }>;
 
 
-export type GetPageMutation = { __typename?: 'Mutation', getPage: { __typename?: 'Page', id: number, intervale: number, url: string } };
+export type GetPageMutation = { __typename?: 'Mutation', getPage: { __typename?: 'History', id: number, status: string, date: any, responseTime: number, screenshot: string } };
 
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -333,8 +333,10 @@ export const GetPageDocument = gql`
     mutation GetPage($data: PageInput!) {
   getPage(data: $data) {
     id
-    intervale
-    url
+    status
+    date
+    responseTime
+    screenshot
   }
 }
     `;

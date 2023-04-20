@@ -7,12 +7,17 @@ import { ApolloError } from "apollo-server-errors";
 import puppeteer from "puppeteer";
 import { join } from "path";
 import { uuid } from "uuidv4";
+import fs from 'fs';
 
 @Resolver(Page)
 export class PageResolver {
   @Query(() => [Page])
   async Page(): Promise<Page[]> {
-    const pages = await datasource.getRepository(Page).find();
+    const pages = await datasource.getRepository(Page).find({
+      relations: {
+        histories: true
+      }
+    });
 
     return pages;
   }
@@ -22,12 +27,17 @@ export class PageResolver {
     return await datasource.getRepository(Page).save(data);
   }
 
-  @Mutation(() => Page)
-  async getPage(@Arg("data") { url }: PageInput): Promise<Page> {
+  @Mutation(() => History)
+  async getPage(@Arg("data") { url }: PageInput): Promise<History> {
+
     const regexHTTP =
       /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
-    if (!url || !regexHTTP.test(url))
-      throw new ApolloError("URL not valid", "URL_NOT_VALID");
+    if (!url || !regexHTTP.test(url)) throw new ApolloError("URL not valid", "URL_NOT_VALID");
+
+    if (url.endsWith('/')) {
+      url = url.substring(0, url.length - 1);
+    }
+
 
     const startTime = Date.now();
     const axiosResult = await axios
@@ -54,6 +64,15 @@ export class PageResolver {
       });
 
     let screenshotName = "none";
+    const directoryName = join(__dirname, `../screenshot/`);
+
+    if (!fs.existsSync(directoryName)) {
+      fs.mkdir(directoryName, (err) => {
+        if (err) return console.log(err);
+        console.log('Le dossier à été crée avec succès');
+      })
+    }
+
     try {
       const browser = await puppeteer.launch({
         headless: true,
@@ -79,20 +98,23 @@ export class PageResolver {
       console.error(err);
     }
 
-    const newPage = await datasource.getRepository(Page).save({ url: url });
-    console.log(axiosResult);
+    let page: Page;
+    const existingPage = await datasource.getRepository(Page).findOneBy({ url });
+
+    if (existingPage === null) {
+      page = await datasource.getRepository(Page).save({ url });
+    } else {
+      page = existingPage
+    }
 
     const history = await datasource.getRepository(History).save({
       status: axiosResult.status,
       date: new Date(),
       responseTime: axiosResult.responseTime,
-      page: newPage,
+      page: page,
       screenshot: screenshotName !== "none" ? screenshotName : "none",
     });
 
-    return newPage;
-    // const test = await datasource.getRepository(Page).findOneBy({ url });
-    // if (test === null) throw new ApolloError("error");
-    // return test;
+    return history;
   }
 }
