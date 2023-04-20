@@ -25,11 +25,12 @@ class History {
   responseTime: number;
 
   @Field()
-  @Column({ 
+  @Column({
     nullable: true
   })
   screenshot: string;
 
+  @Field(() => Page)
   @ManyToOne(() => Page, page => page.histories)
   page: Page;
 }

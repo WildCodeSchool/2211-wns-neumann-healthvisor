@@ -13,9 +13,18 @@ import {
 } from "../../gql/generated/schema";
 import { Stack } from "@mui/system";
 
+interface ApiResponse {
+  id: number;
+  status: string;
+  date: string;
+  responseTime: number;
+  screenshot: string;
+}
+
 const SearchBox = () => {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [response, setResponse] = useState<ApiResponse | null>(null);
 
   const [page] = useGetPageMutation();
 
@@ -26,16 +35,23 @@ const SearchBox = () => {
   //     },
   //   });
   // };
-
+  
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     await page({ variables: { data: { url } } }).then((p) => {
-      console.log(p);
+      setResponse({
+          id: p.data?.getPage.id as number,
+          status: p.data?.getPage.status as string,
+          date: p.data?.getPage.date,
+          responseTime: p.data?.getPage.responseTime as number,
+          screenshot: p.data?.getPage.screenshot as string
+      });
       // getLastHistory(p.data?.getPage.id)
       setLoading(false);
     });
+    
     // console.log(await pageCreated);
   };
 
@@ -43,7 +59,7 @@ const SearchBox = () => {
     <Box
       sx={{
         width: "50%",
-        height: "15%",
+        height: "fit-content",
         maxWidth: "600px",
         bgcolor: "background.paper",
         borderRadius: "4px",
@@ -77,6 +93,12 @@ const SearchBox = () => {
         <Stack sx={{ width: "100%" }}>
           {loading ? <LinearProgress color="secondary" /> : ""}
         </Stack>
+        {response !== null ? <div>
+          <p>Status: {response?.status}</p>
+          <p>ResponseTime: {response?.responseTime}ms</p>
+          <p>Date: {response?.date}</p>
+          <img style={{width: "100%", height: "auto", objectFit: "contain"}} src={`http://localhost:4000/screenshot/${response?.screenshot}.png`} />
+        </div> : <div></div>}
         <Button type="submit" variant="contained" disabled={loading} fullWidth>
           Recherchez
         </Button>

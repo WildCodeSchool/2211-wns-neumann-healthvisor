@@ -1,6 +1,6 @@
 import { Field, ObjectType, InputType } from "type-graphql";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { MaxLength, MinLength  } from "class-validator";
+import { MaxLength, MinLength } from "class-validator";
 import History from "./History";
 
 // import User from "./User";
@@ -22,7 +22,8 @@ class Page {
     @Column({ default: 1 })
     intervale: number;
 
-    @OneToMany(() => History, history => history.page)
+    @Field(() => [History])
+    @OneToMany(() => History, (history) => history.page)
     histories: History[];
 }
 
