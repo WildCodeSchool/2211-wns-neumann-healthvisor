@@ -42,11 +42,13 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
 
   const verifyPassword = (confirmedPassword: string) => {
     setConfirmPassword(confirmedPassword);
-    if (password !== confirmPassword) {
-      setErrorPassword(true);
-    } else {
-      setErrorPassword(false);
-    }
+    setErrorPassword(prevState => {
+      if (password !== confirmedPassword) {
+        return true;
+      } else {
+        return false;
+      }
+    });
   };
   return (
     <Container component="main" maxWidth="xs">
