@@ -7,7 +7,7 @@ import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 import { ApolloProvider } from "@apollo/client";
-import apolloClient from "./gql/client";
+import client from "./gql/client";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
@@ -19,7 +19,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <ApolloProvider client={apolloClient}>
+      <ApolloProvider client={client}>
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />

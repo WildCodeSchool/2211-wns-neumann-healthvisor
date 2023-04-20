@@ -1,5 +1,6 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 
+
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   defaultOptions: {
@@ -8,7 +9,7 @@ const client = new ApolloClient({
     },
   },
   link: createHttpLink({
-    uri: "http://localhost:4000/graphql",
+    uri: process.env.REACT_APP_GRAPHQL_API_URL || "http://localhost:4000/graphql",
     credentials: 'include'
   }),
 });
