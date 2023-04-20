@@ -1,13 +1,14 @@
 import "reflect-metadata";
 import db from "./db";
-import { ApolloServer } from "apollo-server";
+import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import { buildSchema } from "type-graphql";
 import { join } from "path";
 import express from "express";
+import cors from "cors";
 import jwt from "jsonwebtoken";
 import { env } from "./env";
-import User from "./entity/User"
+import User from "./entity/User";
 import cookie from "cookie";
 
 export interface JWTPayload {
@@ -24,7 +25,7 @@ async function start(): Promise<void> {
   console.log("Starting...");
 
   await db.initialize();
-  
+
   const schema = await buildSchema({
     resolvers: [join(__dirname, "/resolvers/*.ts")],
     authChecker: async ({ context }: { context: ContextType }) => {
@@ -35,10 +36,10 @@ async function start(): Promise<void> {
       const tokenInCookie = cookie.parse(headers.cookie ?? "").token;
 
       const token = tokenInAuthHeaders ?? tokenInCookie;
-      
+
       if (typeof token === "string") {
         const decoded = jwt.verify(token, env.JWT_PRIVATE_KEY) as JWTPayload;
-        
+
         if (typeof decoded === "object") {
           const currentUser = await db
             .getRepository(User)
@@ -50,7 +51,8 @@ async function start(): Promise<void> {
       return false;
     },
   });
-  
+
+  const app = express();
 
   const server = new ApolloServer({
     schema,
@@ -58,14 +60,30 @@ async function start(): Promise<void> {
     cache: "bounded",
     plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
     context: ({ req, res }) => ({ req, res }),
+  });
+
+  await server.start();
+
+  server.applyMiddleware({
+    app,
     cors: {
+      // origin: true,
       origin: env.CORS_ALLOWED_ORIGINS.split(","),
       credentials: true
     },
   });
 
-  await server.listen().then(({ url }: { url: string }) => {
-    console.log(`Server ready : ${url}`);
+  app.use("/screenshot", express.static(__dirname + "/screenshot"));
+
+  app.get("/", (req, res) => {
+    res.send("API HealthVisor 1.0");
+  });
+
+  app.listen({ port: 4000 }, () => {
+    console.log(
+      `🚀 Apollo Server ready at http://localhost:4000${server.graphqlPath}`
+    );
+    console.log(`📷 Screenshot available at http://localhost:4000/screenshot/`);
   });
 }
 

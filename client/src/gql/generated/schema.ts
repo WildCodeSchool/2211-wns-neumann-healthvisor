@@ -13,10 +13,28 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  DateTime: any;
 };
 
 export type FetchInput = {
   id: Scalars['Float'];
+};
+
+export type History = {
+  __typename?: 'History';
+  date: Scalars['DateTime'];
+  id: Scalars['Float'];
+  responseTime: Scalars['Float'];
+  screenshot: Scalars['String'];
+  status: Scalars['String'];
+};
+
+export type HistoryInput = {
+  date: Scalars['DateTime'];
+  id: Scalars['Float'];
+  page: Scalars['Float'];
+  responseTime: Scalars['Float'];
+  status: Scalars['String'];
 };
 
 export type LoginInput = {
@@ -28,7 +46,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   createPage: Page;
   createUser: User;
-  getPage: Page;
+  getPage: History;
   loginUser: Scalars['String'];
   logoutUser: Scalars['Boolean'];
 };
@@ -66,11 +84,24 @@ export type PageInput = {
 
 export type Query = {
   __typename?: 'Query';
+  History: Array<History>;
   Page: Array<Page>;
+  fetchHistoryById: History;
+  fetchLastHistoryPageById: History;
   fetchUserById: User;
   getUserPages: Array<Page>;
   profile: User;
   users: Array<User>;
+};
+
+
+export type QueryFetchHistoryByIdArgs = {
+  id: Scalars['Int'];
+};
+
+
+export type QueryFetchLastHistoryPageByIdArgs = {
+  id: Scalars['Int'];
 };
 
 
@@ -103,12 +134,33 @@ export type CreateUserMutationVariables = Exact<{
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', email: string, id: number } };
 
+export type HistoryQueryVariables = Exact<{
+  fetchHistoryByIdId: Scalars['Int'];
+}>;
+
+
+export type HistoryQuery = { __typename?: 'Query', fetchHistoryById: { __typename?: 'History', date: any, id: number, responseTime: number, screenshot: string, status: string } };
+
+export type FetchLastHistoryPageByIdQueryVariables = Exact<{
+  fetchLastHistoryPageById: Scalars['Int'];
+}>;
+
+
+export type FetchLastHistoryPageByIdQuery = { __typename?: 'Query', fetchLastHistoryPageById: { __typename?: 'History', id: number, date: any, responseTime: number, screenshot: string, status: string } };
+
 export type FetchUserByIdQueryVariables = Exact<{
   id: Scalars['Int'];
 }>;
 
 
 export type FetchUserByIdQuery = { __typename?: 'Query', fetchUserById: { __typename?: 'User', email: string, id: number, premium?: boolean | null, role?: number | null } };
+
+export type GetPageMutationVariables = Exact<{
+  data: PageInput;
+}>;
+
+
+export type GetPageMutation = { __typename?: 'Mutation', getPage: { __typename?: 'History', id: number, status: string, date: any, responseTime: number, screenshot: string } };
 
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -174,6 +226,84 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const HistoryDocument = gql`
+    query History($fetchHistoryByIdId: Int!) {
+  fetchHistoryById(id: $fetchHistoryByIdId) {
+    date
+    id
+    responseTime
+    screenshot
+    status
+  }
+}
+    `;
+
+/**
+ * __useHistoryQuery__
+ *
+ * To run a query within a React component, call `useHistoryQuery` and pass it any options that fit your needs.
+ * When your component renders, `useHistoryQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useHistoryQuery({
+ *   variables: {
+ *      fetchHistoryByIdId: // value for 'fetchHistoryByIdId'
+ *   },
+ * });
+ */
+export function useHistoryQuery(baseOptions: Apollo.QueryHookOptions<HistoryQuery, HistoryQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<HistoryQuery, HistoryQueryVariables>(HistoryDocument, options);
+      }
+export function useHistoryLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<HistoryQuery, HistoryQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<HistoryQuery, HistoryQueryVariables>(HistoryDocument, options);
+        }
+export type HistoryQueryHookResult = ReturnType<typeof useHistoryQuery>;
+export type HistoryLazyQueryHookResult = ReturnType<typeof useHistoryLazyQuery>;
+export type HistoryQueryResult = Apollo.QueryResult<HistoryQuery, HistoryQueryVariables>;
+export const FetchLastHistoryPageByIdDocument = gql`
+    query FetchLastHistoryPageById($fetchLastHistoryPageById: Int!) {
+  fetchLastHistoryPageById(id: $fetchLastHistoryPageById) {
+    id
+    date
+    responseTime
+    screenshot
+    status
+  }
+}
+    `;
+
+/**
+ * __useFetchLastHistoryPageByIdQuery__
+ *
+ * To run a query within a React component, call `useFetchLastHistoryPageByIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useFetchLastHistoryPageByIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useFetchLastHistoryPageByIdQuery({
+ *   variables: {
+ *      fetchLastHistoryPageById: // value for 'fetchLastHistoryPageById'
+ *   },
+ * });
+ */
+export function useFetchLastHistoryPageByIdQuery(baseOptions: Apollo.QueryHookOptions<FetchLastHistoryPageByIdQuery, FetchLastHistoryPageByIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<FetchLastHistoryPageByIdQuery, FetchLastHistoryPageByIdQueryVariables>(FetchLastHistoryPageByIdDocument, options);
+      }
+export function useFetchLastHistoryPageByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FetchLastHistoryPageByIdQuery, FetchLastHistoryPageByIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<FetchLastHistoryPageByIdQuery, FetchLastHistoryPageByIdQueryVariables>(FetchLastHistoryPageByIdDocument, options);
+        }
+export type FetchLastHistoryPageByIdQueryHookResult = ReturnType<typeof useFetchLastHistoryPageByIdQuery>;
+export type FetchLastHistoryPageByIdLazyQueryHookResult = ReturnType<typeof useFetchLastHistoryPageByIdLazyQuery>;
+export type FetchLastHistoryPageByIdQueryResult = Apollo.QueryResult<FetchLastHistoryPageByIdQuery, FetchLastHistoryPageByIdQueryVariables>;
 export const FetchUserByIdDocument = gql`
     query FetchUserById($id: Int!) {
   fetchUserById(id: $id) {
@@ -212,6 +342,43 @@ export function useFetchUserByIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type FetchUserByIdQueryHookResult = ReturnType<typeof useFetchUserByIdQuery>;
 export type FetchUserByIdLazyQueryHookResult = ReturnType<typeof useFetchUserByIdLazyQuery>;
 export type FetchUserByIdQueryResult = Apollo.QueryResult<FetchUserByIdQuery, FetchUserByIdQueryVariables>;
+export const GetPageDocument = gql`
+    mutation GetPage($data: PageInput!) {
+  getPage(data: $data) {
+    id
+    status
+    date
+    responseTime
+    screenshot
+  }
+}
+    `;
+export type GetPageMutationFn = Apollo.MutationFunction<GetPageMutation, GetPageMutationVariables>;
+
+/**
+ * __useGetPageMutation__
+ *
+ * To run a mutation, you first call `useGetPageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useGetPageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [getPageMutation, { data, loading, error }] = useGetPageMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useGetPageMutation(baseOptions?: Apollo.MutationHookOptions<GetPageMutation, GetPageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<GetPageMutation, GetPageMutationVariables>(GetPageDocument, options);
+      }
+export type GetPageMutationHookResult = ReturnType<typeof useGetPageMutation>;
+export type GetPageMutationResult = Apollo.MutationResult<GetPageMutation>;
+export type GetPageMutationOptions = Apollo.BaseMutationOptions<GetPageMutation, GetPageMutationVariables>;
 export const GetProfileDocument = gql`
     query getProfile {
   profile {

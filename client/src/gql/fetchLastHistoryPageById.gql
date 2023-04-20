@@ -1,0 +1,9 @@
+query FetchLastHistoryPageById($fetchLastHistoryPageById: Int!) {
+  fetchLastHistoryPageById(id: $fetchLastHistoryPageById) {
+    id
+    date
+    responseTime
+    screenshot
+    status
+  }
+}
