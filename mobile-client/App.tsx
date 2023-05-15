@@ -1,39 +1,31 @@
-import { ApolloProvider } from '@apollo/client';
-import { StatusBar } from 'expo-status-bar';
+import { ApolloProvider } from "@apollo/client";
+import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import Ionicons from "@expo/vector-icons/Ionicons";
-import PageListe from "./screens/PageListeScreen";
-import AccountScreen from "./screens/AccountScreen";
-import client from './gql/client';
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import LoginScreen from "./screens/LoginScreen";
+import client from "./gql/client";
+import HomeScreen from "./screens/HomeScreen";
 
-const Tab = createBottomTabNavigator();
 export default function App() {
+  // const Tab = createBottomTabNavigator();
+  const Stack = createNativeStackNavigator();
   return (
     <ApolloProvider client={client}>
       <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={({ route }) => ({
-          tabBarIcon: ({ focused, color, size }) => {
-            let iconName;
-
-            if (route.name === "Historique") {
-              iconName = focused ? "list" : "list-outline";
-            } else if (route.name === "Mon compte") {
-              iconName = focused ? "key" : "key-outline";
-            }
-            
-            return <Ionicons name={iconName} size={size} color={color} />;
-          },
-          tabBarActiveTintColor: "green",
-          tabBarInactiveTintColor: "gray",
-        })}
-      >
-        <Tab.Screen name="Historique" component={PageListe} />
-        <Tab.Screen name="Mon compte" component={AccountScreen} />
-      </Tab.Navigator>
-    </NavigationContainer>
-        <StatusBar style="auto" />
+        <Stack.Navigator>
+          <Stack.Screen
+            name="Login"
+            component={LoginScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Home"
+            component={HomeScreen}
+            options={{ headerShown: false }}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+      <StatusBar style="auto" />
     </ApolloProvider>
   );
 }

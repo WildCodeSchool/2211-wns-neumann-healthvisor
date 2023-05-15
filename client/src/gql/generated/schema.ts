@@ -24,6 +24,7 @@ export type History = {
   __typename?: 'History';
   date: Scalars['DateTime'];
   id: Scalars['Float'];
+  page: Page;
   responseTime: Scalars['Float'];
   screenshot: Scalars['String'];
   status: Scalars['String'];
@@ -73,6 +74,7 @@ export type MutationLoginUserArgs = {
 
 export type Page = {
   __typename?: 'Page';
+  histories: Array<History>;
   id: Scalars['Float'];
   intervale: Scalars['Float'];
   url: Scalars['String'];
