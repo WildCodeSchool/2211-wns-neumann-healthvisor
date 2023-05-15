@@ -1,28 +1,29 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native';
-import { usePageQuery } from '../gql/generated/schema';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { usePageQuery } from "../gql/generated/schema";
+import PageCard from "../components/PageCard";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function PageListe() {
+  const { data, loading, error } = usePageQuery();
+  const pages = data?.Page || [];
 
- const { data, loading, error } = usePageQuery();
- const pages = data?.Page || [];
- 
   return (
-    <View style={styles.container}>
-      <Text>Pages</Text>
-      <FlatList
-        data={pages}
-        renderItem={({item}) => <Text>{item.url}</Text>}
-        keyExtractor={item => item.id.toString()}
-      />
-    </View>
+    <SafeAreaView >
+      <View >
+        <FlatList
+          data={pages}
+          renderItem={({ item }) => <PageCard page={item} />}
+          keyExtractor={(item) => item.id.toString()}
+        />
+      </View>
+    </SafeAreaView>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const styles = StyleSheet.create({});

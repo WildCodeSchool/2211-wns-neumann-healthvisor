@@ -40,14 +40,23 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
     }
   };
 
-  const verifyPassword = (confirmedPassword: string) => {
+  const handlePassword = (passwordPassword: string) => {
+    setPassword(passwordPassword);
+    verifyPassword()
+  };
+  const handleVerifyPassword = (confirmedPassword: string) => {
     setConfirmPassword(confirmedPassword);
-    if (password !== confirmPassword) {
+    verifyPassword()
+  };
+
+  const verifyPassword = () => {
+    if (password.toString() === confirmPassword.toString()) {
       setErrorPassword(true);
     } else {
       setErrorPassword(false);
     }
   };
+
   return (
     <Container component="main" maxWidth="xs">
       <Box
@@ -88,7 +97,7 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
             id="password"
             autoComplete="current-password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => handlePassword(e.target.value)}
           />
           <TextField
             margin="normal"
@@ -104,13 +113,14 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
             type="password"
             id="confirmPassword"
             value={confirmPassword}
-            onChange={(e) => verifyPassword(e.target.value)}
+            onChange={(e) => handleVerifyPassword(e.target.value)}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            disabled={errorPassword}
           >
             S'inscrire
           </Button>

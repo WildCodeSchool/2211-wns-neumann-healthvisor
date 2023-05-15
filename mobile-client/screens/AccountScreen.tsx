@@ -1,34 +1,38 @@
-import React, { useState } from 'react'
-import { View, Text, TextInput, TouchableOpacity } from "react-native"
+import React from "react";
+import { Button, Text, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  useGetProfileQuery,
+  useLogoutUserMutation,
+} from "../gql/generated/schema";
 
-const AccountScreen = () => {
-    const [email, setEmail] = useState();
-    const [password, setPassword] = useState();
+const AccountScreen = ({ navigation }: any) => {
+  const [logoutUser] = useLogoutUserMutation();
+  const { data: currentUser, client } = useGetProfileQuery({
+    errorPolicy: "ignore",
+  });
 
-    const onPressLogin = () => {
-        alert("login");
-    }
-
+  const logout = async () => {
+    await logoutUser();
+    client.resetStore();
+    navigation.navigate("Login");
+  };
   return (
-    <View>
-        <Text>HealthVisor</Text>
-        {/* <TextInput
-        placeholder="Email"
-        onChangeText={e => setEmail(e)}
-        >
-        <TextInput
-        secureTextEntry
-        placeholder="Mot de passe"
-        onChangeText={e => setPassword(e)}
-        >
-        <TouchableOpacity
-        onPress={onPressLogin} >
+    <SafeAreaView>
+      <View>
+        <Text>AccountScreen</Text>
         <Text>
-            Se connecter
+            { currentUser && 
+            `
+            Role: ${currentUser.profile.role}
+            Email: ${currentUser.profile.email}            
+            `
+            }
         </Text>
-        </TouchableOpacity> */}
-    </View>
-  )
-}
+        <Button title="Deconnexion" onPress={() => logout()} />
+      </View>
+    </SafeAreaView>
+  );
+};
 
 export default AccountScreen;
