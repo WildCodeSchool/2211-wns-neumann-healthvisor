@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { useState } from "react";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import { useGetProfileQuery } from "../../gql/generated/schema";
 import CardPage from "../../components/CardPage/CardPage";
@@ -26,9 +26,15 @@ const Dashboard = () => {
       <Sidebar open={open} onClose={() => handlerCloseSidebar()} />
       <button onClick={() => handlerOpenSidebar()}>Open</button>
       <div className="card-page-wrapper">
-        {pages?.map((page) => (
-          <CardPage page={page} key={page.id} />
-        ))}
+        {pages?.map((page) => {
+          const lastHistory = page.histories[page.histories.length - 1];
+          const pageInfos = {
+            screenshot: lastHistory.screenshot,
+            status: lastHistory.status,
+            responseTime: lastHistory.responseTime,
+          };
+          return <CardPage infos={pageInfos} url={page.url} key={page.id} />;
+        })}
       </div>
     </div>
   );

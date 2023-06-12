@@ -36,6 +36,24 @@ class History {
   user: User;
 }
 
+@ObjectType()
+export class HistoryAnonymous {
+  @Field()
+  status: string;
+
+  @Field()
+  date: Date;
+
+  @Field()
+  responseTime: number;
+
+  @Field()
+  screenshot: string;
+
+  @Field()
+  url: string;
+}
+
 @InputType()
 export class HistoryInput {
   @Field()

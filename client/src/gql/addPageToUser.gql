@@ -1,3 +1,9 @@
-mutation AddPageToUser($historyId: Float!) {
-  addPageToUser(historyId: $historyId)
+mutation AddPageToUser($url: PageInput!) {
+  addPageToUser(url: $url) {
+    id
+    status
+    date
+    responseTime
+    screenshot
+  }
 }

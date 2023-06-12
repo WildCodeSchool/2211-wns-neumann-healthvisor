@@ -1,7 +1,8 @@
 .card-page {
     position: relative;
-    width: 30%;
+    max-width: 500px;
     height: 300px;
+    margin: 20px 0;
 
     img {
         width: 100%;
@@ -13,10 +14,11 @@
         position: absolute;
         width: 100%;
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
         align-items: center;
         bottom: 0;
-        padding: 10px 0px;
+        left: 0;
+        padding: 10px 5px;
         background: rgba(56, 56, 56, 0.94);
         color: #ffff;
 

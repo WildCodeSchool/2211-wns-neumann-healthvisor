@@ -1,7 +1,7 @@
 import { Resolver, Query, Arg, Mutation, Ctx, Authorized } from "type-graphql";
 import datasource from "../db";
 import Page, { PageInput } from "../entity/Page";
-import History from "../entity/History";
+import History, { HistoryAnonymous } from "../entity/History";
 import axios from "axios";
 import { ApolloError } from "apollo-server-errors";
 import puppeteer from "puppeteer";
@@ -30,8 +30,8 @@ export class PageResolver {
     return await datasource.getRepository(Page).save(data);
   }
 
-  @Mutation(() => History)
-  async getPage(@Arg("data") { url }: PageInput): Promise<History> {
+  @Mutation(() => HistoryAnonymous)
+  async getPage(@Arg("data") { url }: PageInput): Promise<HistoryAnonymous> {
 
     const regexHTTP =
       /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
@@ -86,8 +86,99 @@ export class PageResolver {
       await page.goto(url, { waitUntil: "networkidle2" });
 
       await page.setViewport({
-        width: 500,
-        height: 500,
+        width: 1200,
+        height: 750,
+      });
+      screenshotName = uuid();
+      await page.screenshot({
+        path: join(__dirname, `../screenshot/${screenshotName}.png`),
+      });
+
+      await browser.close();
+      console.log("screenshot effectué");
+    } catch (err) {
+      console.error(err);
+    }
+
+    const history = {
+      status: axiosResult.status,
+      date: new Date(),
+      responseTime: axiosResult.responseTime,
+      url: url,
+      screenshot: screenshotName !== "none" ? `${screenshotName}.png` : "none",
+    };
+
+    return history;
+  }
+
+  @Authorized()
+  @Mutation(() => History)
+  async addPageToUser(@Ctx() { currentUser }: ContextType, @Arg("url") { url }: PageInput): Promise<History> {
+
+    if (typeof currentUser === "undefined") throw new ApolloError("User error", "USER_ERROR");
+
+    const userDB = await datasource.getRepository(User).findOne({
+      where: { id: currentUser.id },
+      relations: { pages: { histories: true, users: false } },
+    });
+
+    if (userDB === null) throw new ApolloError("User error", "USER_ERROR");
+
+    const regexHTTP =
+      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
+    if (!url || !regexHTTP.test(url)) throw new ApolloError("URL not valid", "URL_NOT_VALID");
+
+    if (url.endsWith('/')) {
+      url = url.substring(0, url.length - 1);
+    }
+
+    const startTime = Date.now();
+    const axiosResult = await axios
+      .get(url)
+      .then((res) => {
+        const endTime = Date.now();
+        const responseTime = endTime - startTime;
+        return {
+          status: res.status,
+          responseUrl: res.request.res.responseUrl,
+          redirectCount: res.request._redirectable._redirectCount,
+          responseTime,
+        };
+      })
+      .catch((err) => {
+        const endTime = Date.now();
+        const responseTime = endTime - startTime;
+        console.log(err.message);
+        return {
+          status: err.response.status,
+          responseUrl: err.request.res.responseUrl,
+          redirectCount: err.request._redirectable._redirectCount,
+          responseTime,
+        };
+      });
+
+    let screenshotName = "none";
+    const directoryName = join(__dirname, `../screenshot/`);
+
+    if (!fs.existsSync(directoryName)) {
+      fs.mkdir(directoryName, (err) => {
+        if (err) return console.log(err);
+        console.log('Le dossier à été crée avec succès');
+      })
+    }
+
+    try {
+      const browser = await puppeteer.launch({
+        headless: true,
+        executablePath: "/usr/bin/chromium-browser",
+        args: ["--no-sandbox", "--disabled-setupid-sandbox"],
+      });
+      const page = await browser.newPage();
+      await page.goto(url, { waitUntil: "networkidle2" });
+
+      await page.setViewport({
+        width: 1200,
+        height: 750,
       });
       screenshotName = uuid();
       await page.screenshot({
@@ -115,25 +206,16 @@ export class PageResolver {
       responseTime: axiosResult.responseTime,
       page: page,
       screenshot: screenshotName !== "none" ? `${screenshotName}.png` : "none",
+      user: userDB
     });
 
-    return history;
-  }
+    const pageAlreadyOwned = userDB.pages?.some(p => p.url === page.url);
 
-  @Authorized()
-  @Mutation(() => Boolean)
-  async addPageToUser(@Ctx() { currentUser }: ContextType, @Arg("historyId") id: number): Promise<boolean> {
+    if (!pageAlreadyOwned) userDB.pages?.push(page);
+    await datasource.getRepository(User).save(userDB);
 
-    if (typeof currentUser === "undefined") throw new ApolloError("User error", "USER_ERROR");
 
-    const userDB = await datasource.getRepository(User).findOne({
-      where: { id: currentUser.id },
-      relations: { pages: { histories: true } },
-    });
-
-    if (userDB === null) throw new ApolloError("User error", "USER_ERROR");
-
-    const history = await datasource.getRepository(History).findOne({ relations: { page: true, user: true }, where: { id } });
+    /*const history = await datasource.getRepository(History).findOne({ relations: { page: true, user: true }, where: { id } });
 
     if (history === null) throw new ApolloError("History error", "HISTORY_ERROR");
 
@@ -153,8 +235,8 @@ export class PageResolver {
 
     await datasource.getRepository(Page).save(pageDB);
 
-    await datasource.getRepository(User).save(userDB);
+    await datasource.getRepository(User).save(userDB);*/
 
-    return true;
+    return history;
   }
 }

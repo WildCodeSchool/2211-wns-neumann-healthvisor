@@ -25,6 +25,15 @@ export type History = {
   status: Scalars['String'];
 };
 
+export type HistoryAnonymous = {
+  __typename?: 'HistoryAnonymous';
+  date: Scalars['DateTime'];
+  responseTime: Scalars['Float'];
+  screenshot: Scalars['String'];
+  status: Scalars['String'];
+  url: Scalars['String'];
+};
+
 export type HistoryInput = {
   date: Scalars['DateTime'];
   id: Scalars['Float'];
@@ -40,17 +49,17 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  addPageToUser: Scalars['Boolean'];
+  addPageToUser: History;
   createPage: Page;
   createUser: User;
-  getPage: History;
+  getPage: HistoryAnonymous;
   loginUser: Scalars['String'];
   logoutUser: Scalars['Boolean'];
 };
 
 
 export type MutationAddPageToUserArgs = {
-  historyId: Scalars['Float'];
+  url: PageInput;
 };
 
 
@@ -130,11 +139,11 @@ export type User = {
 };
 
 export type AddPageToUserMutationVariables = Exact<{
-  historyId: Scalars['Float'];
+  url: PageInput;
 }>;
 
 
-export type AddPageToUserMutation = { __typename?: 'Mutation', addPageToUser: boolean };
+export type AddPageToUserMutation = { __typename?: 'Mutation', addPageToUser: { __typename?: 'History', id: number, status: string, date: any, responseTime: number, screenshot: string } };
 
 export type CreateUserMutationVariables = Exact<{
   data: SignUpInput;
@@ -169,7 +178,7 @@ export type GetPageMutationVariables = Exact<{
 }>;
 
 
-export type GetPageMutation = { __typename?: 'Mutation', getPage: { __typename?: 'History', id: number, status: string, date: any, responseTime: number, screenshot: string } };
+export type GetPageMutation = { __typename?: 'Mutation', getPage: { __typename?: 'HistoryAnonymous', status: string, date: any, responseTime: number, screenshot: string, url: string } };
 
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -195,8 +204,14 @@ export type LogoutUserMutation = { __typename?: 'Mutation', logoutUser: boolean 
 
 
 export const AddPageToUserDocument = gql`
-    mutation AddPageToUser($historyId: Float!) {
-  addPageToUser(historyId: $historyId)
+    mutation AddPageToUser($url: PageInput!) {
+  addPageToUser(url: $url) {
+    id
+    status
+    date
+    responseTime
+    screenshot
+  }
 }
     `;
 export type AddPageToUserMutationFn = Apollo.MutationFunction<AddPageToUserMutation, AddPageToUserMutationVariables>;
@@ -214,7 +229,7 @@ export type AddPageToUserMutationFn = Apollo.MutationFunction<AddPageToUserMutat
  * @example
  * const [addPageToUserMutation, { data, loading, error }] = useAddPageToUserMutation({
  *   variables: {
- *      historyId: // value for 'historyId'
+ *      url: // value for 'url'
  *   },
  * });
  */
@@ -379,11 +394,11 @@ export type FetchUserByIdQueryResult = Apollo.QueryResult<FetchUserByIdQuery, Fe
 export const GetPageDocument = gql`
     mutation GetPage($data: PageInput!) {
   getPage(data: $data) {
-    id
     status
     date
     responseTime
     screenshot
+    url
   }
 }
     `;

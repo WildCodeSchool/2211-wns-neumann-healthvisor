@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import {
   Container,
   TextField,
@@ -43,20 +43,22 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
 
   const handlePassword = (passwordPassword: string) => {
     setPassword(passwordPassword);
-    verifyPassword()
   };
-  const handleVerifyPassword = (confirmedPassword: string) => {
+  const handleConfirmPassword = (confirmedPassword: string) => {
     setConfirmPassword(confirmedPassword);
-    verifyPassword()
   };
 
   const verifyPassword = () => {
     if (password.toString() === confirmPassword.toString()) {
-      setErrorPassword(true);
-    } else {
       setErrorPassword(false);
+    } else {
+      setErrorPassword(true);
     }
   };
+
+  useEffect(() => {
+    verifyPassword();
+  }, [password, confirmPassword]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -75,7 +77,7 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
           Inscription
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
-        <TextField
+          <TextField
             margin="normal"
             required
             fullWidth
@@ -108,6 +110,10 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
             label="Mot de passe"
             type="password"
             id="password"
+            error={errorPassword}
+            helperText={
+              errorPassword ? "Les mots de passes ne correspondent pas." : ""
+            }
             autoComplete="current-password"
             value={password}
             onChange={(e) => handlePassword(e.target.value)}
@@ -126,7 +132,7 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
             type="password"
             id="confirmPassword"
             value={confirmPassword}
-            onChange={(e) => handleVerifyPassword(e.target.value)}
+            onChange={(e) => handleConfirmPassword(e.target.value)}
           />
           <Button
             type="submit"
