@@ -1,0 +1,3 @@
+mutation AddPageToUser($historyId: Float!) {
+  addPageToUser(historyId: $historyId)
+}

@@ -16,15 +16,10 @@ export type Scalars = {
   DateTime: any;
 };
 
-export type FetchInput = {
-  id: Scalars['Float'];
-};
-
 export type History = {
   __typename?: 'History';
   date: Scalars['DateTime'];
   id: Scalars['Float'];
-  page: Page;
   responseTime: Scalars['Float'];
   screenshot: Scalars['String'];
   status: Scalars['String'];
@@ -45,11 +40,17 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addPageToUser: Scalars['Boolean'];
   createPage: Page;
   createUser: User;
   getPage: History;
   loginUser: Scalars['String'];
   logoutUser: Scalars['Boolean'];
+};
+
+
+export type MutationAddPageToUserArgs = {
+  historyId: Scalars['Float'];
 };
 
 
@@ -59,7 +60,7 @@ export type MutationCreatePageArgs = {
 
 
 export type MutationCreateUserArgs = {
-  data: SigninInput;
+  data: SignUpInput;
 };
 
 
@@ -78,6 +79,7 @@ export type Page = {
   id: Scalars['Float'];
   intervale: Scalars['Float'];
   url: Scalars['String'];
+  users: Array<User>;
 };
 
 export type PageInput = {
@@ -110,25 +112,36 @@ export type QueryFetchUserByIdArgs = {
   id: Scalars['Int'];
 };
 
-export type SigninInput = {
+export type SignUpInput = {
   email: Scalars['String'];
+  name: Scalars['String'];
   password: Scalars['String'];
 };
 
 export type User = {
   __typename?: 'User';
   email: Scalars['String'];
+  histories?: Maybe<Array<History>>;
   id: Scalars['Float'];
+  name: Scalars['String'];
+  pages?: Maybe<Array<Page>>;
   premium?: Maybe<Scalars['Boolean']>;
   role?: Maybe<Scalars['Float']>;
 };
 
-export type CreateUserMutationVariables = Exact<{
-  data: SigninInput;
+export type AddPageToUserMutationVariables = Exact<{
+  historyId: Scalars['Float'];
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', email: string, id: number } };
+export type AddPageToUserMutation = { __typename?: 'Mutation', addPageToUser: boolean };
+
+export type CreateUserMutationVariables = Exact<{
+  data: SignUpInput;
+}>;
+
+
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', name: string, email: string, id: number } };
 
 export type HistoryQueryVariables = Exact<{
   fetchHistoryByIdId: Scalars['Int'];
@@ -161,12 +174,12 @@ export type GetPageMutation = { __typename?: 'Mutation', getPage: { __typename?:
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', email: string, id: number, premium?: boolean | null, role?: number | null } };
+export type GetProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: number, name: string, email: string, premium?: boolean | null, role?: number | null, pages?: Array<{ __typename?: 'Page', id: number, url: string, intervale: number, histories: Array<{ __typename?: 'History', id: number, status: string, date: any, responseTime: number, screenshot: string }> }> | null } };
 
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: number, email: string, premium?: boolean | null, role?: number | null }> };
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: number, name: string, email: string, premium?: boolean | null, role?: number | null, pages?: Array<{ __typename?: 'Page', id: number, url: string, intervale: number, histories: Array<{ __typename?: 'History', id: number, status: string, date: any, responseTime: number, screenshot: string }> }> | null }> };
 
 export type LoginUserMutationVariables = Exact<{
   data: LoginInput;
@@ -181,9 +194,41 @@ export type LogoutUserMutationVariables = Exact<{ [key: string]: never; }>;
 export type LogoutUserMutation = { __typename?: 'Mutation', logoutUser: boolean };
 
 
+export const AddPageToUserDocument = gql`
+    mutation AddPageToUser($historyId: Float!) {
+  addPageToUser(historyId: $historyId)
+}
+    `;
+export type AddPageToUserMutationFn = Apollo.MutationFunction<AddPageToUserMutation, AddPageToUserMutationVariables>;
+
+/**
+ * __useAddPageToUserMutation__
+ *
+ * To run a mutation, you first call `useAddPageToUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddPageToUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addPageToUserMutation, { data, loading, error }] = useAddPageToUserMutation({
+ *   variables: {
+ *      historyId: // value for 'historyId'
+ *   },
+ * });
+ */
+export function useAddPageToUserMutation(baseOptions?: Apollo.MutationHookOptions<AddPageToUserMutation, AddPageToUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddPageToUserMutation, AddPageToUserMutationVariables>(AddPageToUserDocument, options);
+      }
+export type AddPageToUserMutationHookResult = ReturnType<typeof useAddPageToUserMutation>;
+export type AddPageToUserMutationResult = Apollo.MutationResult<AddPageToUserMutation>;
+export type AddPageToUserMutationOptions = Apollo.BaseMutationOptions<AddPageToUserMutation, AddPageToUserMutationVariables>;
 export const CreateUserDocument = gql`
-    mutation CreateUser($data: SigninInput!) {
+    mutation CreateUser($data: SignUpInput!) {
   createUser(data: $data) {
+    name
     email
     id
   }
@@ -371,10 +416,23 @@ export type GetPageMutationOptions = Apollo.BaseMutationOptions<GetPageMutation,
 export const GetProfileDocument = gql`
     query getProfile {
   profile {
-    email
     id
+    name
+    email
     premium
     role
+    pages {
+      id
+      url
+      intervale
+      histories {
+        id
+        status
+        date
+        responseTime
+        screenshot
+      }
+    }
   }
 }
     `;
@@ -409,9 +467,22 @@ export const UsersDocument = gql`
     query Users {
   users {
     id
+    name
     email
     premium
     role
+    pages {
+      id
+      url
+      intervale
+      histories {
+        id
+        status
+        date
+        responseTime
+        screenshot
+      }
+    }
   }
 }
     `;

@@ -19,6 +19,7 @@ interface SignUpComponentProps {
 }
 
 const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,7 +34,7 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!errorPassword) {
-      await createUser({ variables: { data: { email, password } } });
+      await createUser({ variables: { data: { name, email, password } } });
       await loginUser({ variables: { data: { email, password } } });
       client.resetStore();
       isLogged();
@@ -74,6 +75,18 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
           Inscription
         </Typography>
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="name"
+            label="Prénom"
+            name="name"
+            autoComplete="name"
+            autoFocus
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
           <TextField
             margin="normal"
             required
