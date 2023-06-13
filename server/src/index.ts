@@ -79,6 +79,10 @@ async function start(): Promise<void> {
     res.send("API HealthVisor 1.0");
   });
 
+  app.get('*', function(req, res){
+    res.status(404).send('404 NOT FOUND :/');
+  });
+
   app.listen({ port: 4000 }, () => {
     console.log(
       `🚀 Apollo Server ready at http://localhost:4000${server.graphqlPath}`
