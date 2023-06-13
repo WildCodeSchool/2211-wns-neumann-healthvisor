@@ -45,27 +45,27 @@ function Sidebar(props: SidebarProps) {
           <ListItem className="centered" onClick={onClose}>
             <ListItemIcon className="large-logo" />
           </ListItem>
-          <ListItem button onClick={() => navigate("/")}>
+          <ListItem onClick={() => navigate("/")}>
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
             <ListItemText primary="Home" />
 
           </ListItem>
-          <ListItem button onClick={onClose}>
+          <ListItem onClick={onClose}>
             <ListItemIcon>
-              <AccountBoxRoundedIcon />
+              <InfoIcon />
             </ListItemIcon>
             <ListItemText primary="Profle" />
           </ListItem>
-          <ListItem button onClick={onClose}>
+          <ListItem onClick={onClose}>
             <ListItemIcon>
-              <LogoutRoundedIcon />
+              <ContactIcon />
             </ListItemIcon>
             <ListItemText primary="Déconnection" />
           </ListItem>
           {currentUser && (
-            <ListItem button onClick={onClose}>
+            <ListItem onClick={onClose}>
               <ListItemText primary={`Welcome, ${currentUser.profile.name}`} />
             </ListItem>
           )}
