@@ -3,6 +3,8 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import { useGetProfileQuery } from "../../gql/generated/schema";
 import CardPage from "../../components/CardPage/CardPage";
 import "./Dashboard.scss";
+import MenuIcon from "@mui/icons-material/Menu";
+import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
@@ -24,7 +26,7 @@ const Dashboard = () => {
   return (
     <div id="dashboard">
       <Sidebar open={open} onClose={() => handlerCloseSidebar()} />
-      <button onClick={() => handlerOpenSidebar()}>Open</button>
+      <MenuIcon fontSize="large" onClick={() => handlerOpenSidebar()} />
       <div className="card-page-wrapper">
         {pages?.map((page) => {
           const lastHistory = page.histories[page.histories.length - 1];
@@ -33,7 +35,11 @@ const Dashboard = () => {
             status: lastHistory.status,
             responseTime: lastHistory.responseTime,
           };
-          return <CardPage infos={pageInfos} url={page.url} key={page.id} />;
+          return (
+            <Link to="/page" state={{ page }} key={page.id}>
+              <CardPage infos={pageInfos} url={page.url} pageId={page.id} />
+            </Link>
+          );
         })}
       </div>
     </div>

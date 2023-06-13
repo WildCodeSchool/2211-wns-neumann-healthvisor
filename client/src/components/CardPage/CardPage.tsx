@@ -5,7 +5,6 @@ const CardPage = ({
   infos: { screenshot, status, responseTime },
   url,
 }: any) => {
-
   return (
     <div className="card-page">
       <img

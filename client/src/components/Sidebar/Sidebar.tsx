@@ -7,6 +7,7 @@ import ListItemText from "@mui/material/ListItemText";
 import InfoIcon from "@mui/icons-material/Info";
 import HomeIcon from "@mui/icons-material/Home";
 import ContactIcon from "@mui/icons-material/ContactSupport";
+import CloseIcon from "@mui/icons-material/Close";
 import { useGetProfileQuery } from "../../gql/generated/schema";
 import "./Sidebar.scss";
 import { useNavigate } from "react-router-dom";
@@ -39,7 +40,7 @@ function Sidebar(props: SidebarProps) {
         onClose={onClose}
       >
         <List>
-          <button onClick={() => onClose()}>Close</button>
+          <CloseIcon fontSize="large" onClick={() => onClose()} />
           <ListItem className="centered" onClick={onClose}>
             <ListItemIcon className="large-logo" />
           </ListItem>

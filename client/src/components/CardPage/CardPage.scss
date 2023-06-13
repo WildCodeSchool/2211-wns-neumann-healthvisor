@@ -3,6 +3,11 @@
     max-width: 500px;
     height: 300px;
     margin: 20px 0;
+    transition: all .3s ease-in-out;
+
+    &:hover {
+        transform: scale(1.025);
+    }
 
     img {
         width: 100%;

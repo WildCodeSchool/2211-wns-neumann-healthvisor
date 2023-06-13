@@ -26,6 +26,7 @@ const SearchBox = () => {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState<ApiResponse | null>(null);
+  const [urlRequested, setUrlRequested] = useState("");
 
   const { data: currentUser, refetch } = useGetProfileQuery({
     errorPolicy: "ignore",
@@ -46,6 +47,7 @@ const SearchBox = () => {
         responseTime: p.data?.getPage.responseTime as number,
         screenshot: p.data?.getPage.screenshot as string,
       });
+      setUrlRequested(url);
       setLoading(false);
     } catch (err) {
       console.log(err);
@@ -73,7 +75,7 @@ const SearchBox = () => {
         screenshot: res.data?.addPageToUser.screenshot as string,
       });
       await refetch();
-
+      setUrlRequested(url);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -124,7 +126,7 @@ const SearchBox = () => {
           </Stack>
 
           {response !== null ? (
-            <CardPage infos={response} url={url} />
+            <CardPage infos={response} url={urlRequested} />
           ) : (
             <div></div>
           )}
