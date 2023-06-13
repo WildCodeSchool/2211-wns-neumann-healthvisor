@@ -1,6 +1,7 @@
 import React, { Fragment } from "react";
-import Sidebar from "../components/Sidebar/Sidebar";
-import { useUsersQuery } from "../gql/generated/schema";
+import AppLayout from "../components/AppLayout/AppLayout";
+import UserPage from "../components/UserPage/UserPage";
+import { useFetchUserByIdQuery, useUsersQuery } from "../gql/generated/schema";
 
 const Dashboard = () => {
   const { error: errorUsers, loading: loadingUsers, data } = useUsersQuery();
@@ -11,12 +12,15 @@ const Dashboard = () => {
   const usersList = users.map((u) => {
     return <div key={u.id}>{u.email}</div>;
   });
+
   return (
-    <Fragment>
-      <Sidebar open={true} onClose={() => {}} />
-      {loadingUsers ? "Chargement" : usersList}
-      <div>test</div>
-    </Fragment>
+    <AppLayout>
+      <Fragment>
+        {loadingUsers ? "Chargement" : usersList}
+        <div></div>
+        <UserPage id={1} />
+      </Fragment>
+    </AppLayout>
   );
 };
 
