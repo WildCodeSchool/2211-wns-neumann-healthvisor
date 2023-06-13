@@ -5,7 +5,7 @@ import { ApolloError } from "apollo-server-errors";
 import { ContextType } from '../index';
 import { env } from "../env";
 import jwt from 'jsonwebtoken';
-import History from "../entity/History";
+
 import Page from "../entity/Page";
 
 @Resolver(User)
@@ -31,6 +31,11 @@ export class UserResolver {
     if (existingUser == null) throw new ApolloError('User does not exist', 'USER_NOT_EXIST');
 
     return existingUser;
+  }
+  
+  @Query (() => [Page])
+  async getUserPages(@Arg("id",()=>Int) id : number): Promise<Page[]> {
+      return await datasource.getRepository(Page).findBy({ id });
   }
 
   @Mutation(() => User)

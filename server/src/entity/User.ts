@@ -2,8 +2,8 @@ import { Field, ObjectType, InputType } from "type-graphql";
 import { MaxLength, MinLength, IsEmail, IsNotEmpty } from "class-validator";
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { argon2id, hash, verify } from "argon2";
-
 import Page from "./Page";
+
 import History from "./History";
 
 @ObjectType()
@@ -44,6 +44,7 @@ class User {
   @Field(() => [History], { nullable: true })
   @OneToMany(() => History, history => history.user)
   histories?: History[];
+
 
 }
 

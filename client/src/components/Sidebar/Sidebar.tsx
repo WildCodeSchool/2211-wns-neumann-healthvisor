@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 interface SidebarProps {
   open: boolean;
   onClose: () => void;
+  className?: string;
 }
 
 function Sidebar(props: SidebarProps) {
@@ -49,18 +50,19 @@ function Sidebar(props: SidebarProps) {
               <HomeIcon />
             </ListItemIcon>
             <ListItemText primary="Home" />
+
           </ListItem>
           <ListItem button onClick={onClose}>
             <ListItemIcon>
-              <InfoIcon />
+              <AccountBoxRoundedIcon />
             </ListItemIcon>
-            <ListItemText primary="About" />
+            <ListItemText primary="Profle" />
           </ListItem>
           <ListItem button onClick={onClose}>
             <ListItemIcon>
-              <ContactIcon />
+              <LogoutRoundedIcon />
             </ListItemIcon>
-            <ListItemText primary="Contact" />
+            <ListItemText primary="Déconnection" />
           </ListItem>
           {currentUser && (
             <ListItem button onClick={onClose}>
