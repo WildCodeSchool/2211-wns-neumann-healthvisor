@@ -15,5 +15,6 @@ RUN npm i
 COPY src ./src
 COPY public ./public
 COPY tsconfig.json .
+COPY .env .
 
 CMD npm start

@@ -101,7 +101,7 @@ const LoginScreen = ({ navigation }: any) => {
                   render={({ field: { onChange, onBlur, value } }: any) => (
                     <TextInput
                       autoCapitalize="none"
-                      autoCompleteType="email"
+                      autoComplete="email"
                       autoCorrect={false}
                       keyboardType="email-address"
                       onBlur={onBlur}
@@ -129,11 +129,11 @@ const LoginScreen = ({ navigation }: any) => {
                   render={({ field: { onChange, onBlur, value } }: any) => (
                     <TextInput
                       autoCapitalize="none"
-                      autoCompleteType="password"
+                      autoComplete="password"
                       autoCorrect={false}
                       onBlur={onBlur}
                       onChangeText={onChange}
-                      onSubmitEditing={onSubmit}
+                      onSubmitEditing={() => onSubmit}
                       ref={passwordInput}
                       returnKeyType="done"
                       secureTextEntry

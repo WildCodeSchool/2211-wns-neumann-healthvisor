@@ -1,9 +1,9 @@
 mutation GetPage($data: PageInput!) {
   getPage(data: $data) {
-    id
     status
     date
     responseTime
     screenshot
+    url
   }
 }

@@ -52,81 +52,82 @@ const HomeHeader = () => {
   const logOut = async () => {
     await logoutUser();
     client.resetStore();
+    window.location.reload();
   };
 
   return (
-      <AppBar position="fixed" sx={{ bgcolor: "#EAEFF1" }}>
-        <Container maxWidth="xl">
-          <Toolbar disableGutters>
-            <Box sx={{ flexGrow: 1 }}>
-              <img
-                src={logo}
-                alt="HEALTHVisor Logo"
-                style={{
-                  marginRight: 16,
-                  height: 60,
-                  width: "auto",
-                }}
-              />
-            </Box>
+    <AppBar position="fixed" sx={{ bgcolor: "#EAEFF1" }}>
+      <Container maxWidth="xl">
+        <Toolbar disableGutters>
+          <Box sx={{ flexGrow: 1 }}>
+            <img
+              src={logo}
+              alt="HEALTHVisor Logo"
+              style={{
+                marginRight: 16,
+                height: 60,
+                width: "auto",
+              }}
+            />
+          </Box>
 
-            {currentUser?.profile ? (
-              <Box sx={{ flexGrow: 0, display: "flex", gap: 1 }}>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  disableElevation
-                  onClick={handleDashboard}
-                  startIcon={<DashboardIcon />}
-                >
-                  Dashboard
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  disableElevation
-                  onClick={logOut}
-                  startIcon={<LogoutIcon />}
-                >
-                  Deconnexion
-                </Button>
-              </Box>
-            ) : (
-              <Box sx={{ flexGrow: 0, display: "flex", gap: 1 }}>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  disableElevation
-                  startIcon={<LoginIcon />}
-                  onClick={handleClickSignIn}
-                >
-                  Connexion
-                </Button>
-                <Button
-                  variant="contained"
-                  color="secondary"
-                  disableElevation
-                  startIcon={<AppRegistrationIcon />}
-                  onClick={handleClickSignUp}
-                >
-                  Inscription
-                </Button>
-              </Box>
-            )}
-          </Toolbar>
-        </Container>
-        <Dialog open={open} onClose={handleClose}>
-          <DialogContent>
-            {signType === "sign-in" ? <Login isLogged={handleClose} /> : ""}
-            {signType === "sign-up" ? <SignUp isLogged={handleClose} /> : ""}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose} color="primary">
-              Fermer
-            </Button>
-          </DialogActions>
-        </Dialog>
-      </AppBar>
+          {currentUser?.profile ? (
+            <Box sx={{ flexGrow: 0, display: "flex", gap: 1 }}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                disableElevation
+                onClick={handleDashboard}
+                startIcon={<DashboardIcon />}
+              >
+                Dashboard
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                disableElevation
+                onClick={logOut}
+                startIcon={<LogoutIcon />}
+              >
+                Deconnexion
+              </Button>
+            </Box>
+          ) : (
+            <Box sx={{ flexGrow: 0, display: "flex", gap: 1 }}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                disableElevation
+                startIcon={<LoginIcon />}
+                onClick={handleClickSignIn}
+              >
+                Connexion
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                disableElevation
+                startIcon={<AppRegistrationIcon />}
+                onClick={handleClickSignUp}
+              >
+                Inscription
+              </Button>
+            </Box>
+          )}
+        </Toolbar>
+      </Container>
+      <Dialog open={open} onClose={handleClose}>
+        <DialogContent>
+          {signType === "sign-in" ? <Login isLogged={handleClose} /> : ""}
+          {signType === "sign-up" ? <SignUp isLogged={handleClose} /> : ""}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Fermer
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </AppBar>
   );
 };
 
