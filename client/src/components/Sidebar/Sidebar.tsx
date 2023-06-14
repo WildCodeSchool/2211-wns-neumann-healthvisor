@@ -53,15 +53,9 @@ function Sidebar(props: SidebarProps) {
 
           </ListItem>
           <ListItem button onClick={onClose}>
-            <ListItemIcon>
-              <AccountBoxRoundedIcon />
-            </ListItemIcon>
             <ListItemText primary="Profle" />
           </ListItem>
           <ListItem button onClick={onClose}>
-            <ListItemIcon>
-              <LogoutRoundedIcon />
-            </ListItemIcon>
             <ListItemText primary="Déconnection" />
           </ListItem>
           {currentUser && (

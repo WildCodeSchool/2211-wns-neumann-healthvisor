@@ -1,23 +1,21 @@
 import React, { useState } from "react";
 import "./HistoryItem.scss";
+import { formatDate } from "../../functions/formatDate";
+import indisponible from "../../assets/images/indisponible.png";
 const HistoryItem = ({ history }: any) => {
-  const date = new Date(history.date);
-
-  const options = {
-    weekday: "numeric",
-    year: "numeric",
-    month: "numeric",
-    day: "numeric",
-  };
 
   return (
     <div className="history-item">
-      <p className="date">{history.date}</p>
+      <p className="date">{formatDate(history.date)}</p>
       <p className="response-time">{history.responseTime}ms</p>
       <div className="status-image">
         <div className="image">
           <img
-            src={`${process.env.REACT_APP_SCREENSHOT_API}/${history.screenshot}`}
+            src={
+              history.screenshot === "none"
+                ? indisponible
+                : `${process.env.REACT_APP_SCREENSHOT_API}/${history.screenshot}`
+            }
             alt="page screenshot"
           />
         </div>

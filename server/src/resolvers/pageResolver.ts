@@ -214,29 +214,6 @@ export class PageResolver {
     if (!pageAlreadyOwned) userDB.pages?.push(page);
     await datasource.getRepository(User).save(userDB);
 
-
-    /*const history = await datasource.getRepository(History).findOne({ relations: { page: true, user: true }, where: { id } });
-
-    if (history === null) throw new ApolloError("History error", "HISTORY_ERROR");
-
-    const pageDB = await datasource.getRepository(Page).findOne({ relations: { histories: true, users: true }, where: { histories: { page: history.page } } });
-
-    if (pageDB === null) throw new ApolloError("Page error", "PAGE_ERROR");
-
-    const pageAlreadyOwned = userDB.pages?.some(page => page.url === pageDB.url);
-
-    if (!pageAlreadyOwned) userDB.pages?.push(pageDB);
-
-    userDB.histories?.push(history);
-
-    history.user = userDB;
-
-    await datasource.getRepository(History).save(history);
-
-    await datasource.getRepository(Page).save(pageDB);
-
-    await datasource.getRepository(User).save(userDB);*/
-
     return history;
   }
 }
