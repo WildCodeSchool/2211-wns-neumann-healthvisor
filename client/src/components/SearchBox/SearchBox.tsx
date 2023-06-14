@@ -22,6 +22,7 @@ interface ApiResponse {
   screenshot: string;
 }
 
+
 const SearchBox = () => {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);

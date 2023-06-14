@@ -1,2 +1,8 @@
-.vscode
-package-lock.json
+mobile-client/.idea/.gitignore
+mobile-client/.idea/mobile-client.iml
+mobile-client/.idea/modules.xml
+mobile-client/.idea/vcs.xml
+mobile-client/.idea/codeStyles/codeStyleConfig.xml
+mobile-client/.idea/codeStyles/Project.xml
+mobile-client/package-lock.json
+integration-tests/package-lock.json

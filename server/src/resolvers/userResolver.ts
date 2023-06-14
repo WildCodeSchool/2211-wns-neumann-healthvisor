@@ -80,3 +80,5 @@ export class UserResolver {
   }
 
 }
+
+export default UserResolver;

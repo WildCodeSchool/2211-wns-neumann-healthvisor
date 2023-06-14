@@ -2,7 +2,6 @@ import { Field, ObjectType, InputType } from "type-graphql";
 import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { MaxLength, MinLength } from "class-validator";
 import History from "./History";
-
 import User from "./User";
 
 @ObjectType()
