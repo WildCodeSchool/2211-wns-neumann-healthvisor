@@ -13,7 +13,7 @@ const HomeScreen = ({ navigation }: any) => {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
+          let iconName = "";
 
           if (route.name === "Pages") {
             iconName = focused ? "list" : "list-outline";

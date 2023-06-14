@@ -1,4 +1,4 @@
-import React, { FormEvent, useState } from "react";
+import React, { FormEvent, useEffect, useState } from "react";
 import {
   Container,
   TextField,
@@ -19,6 +19,7 @@ interface SignUpComponentProps {
 }
 
 const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -33,7 +34,7 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!errorPassword) {
-      await createUser({ variables: { data: { email, password } } });
+      await createUser({ variables: { data: { name, email, password } } });
       await loginUser({ variables: { data: { email, password } } });
       client.resetStore();
       isLogged();
@@ -42,20 +43,22 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
 
   const handlePassword = (passwordPassword: string) => {
     setPassword(passwordPassword);
-    verifyPassword()
   };
-  const handleVerifyPassword = (confirmedPassword: string) => {
+  const handleConfirmPassword = (confirmedPassword: string) => {
     setConfirmPassword(confirmedPassword);
-    verifyPassword()
   };
 
   const verifyPassword = () => {
     if (password.toString() === confirmPassword.toString()) {
-      setErrorPassword(true);
-    } else {
       setErrorPassword(false);
+    } else {
+      setErrorPassword(true);
     }
   };
+
+  useEffect(() => {
+    verifyPassword();
+  }, [password, confirmPassword]);
 
   return (
     <Container component="main" maxWidth="xs">
@@ -78,6 +81,18 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
             margin="normal"
             required
             fullWidth
+            id="name"
+            label="Prénom"
+            name="name"
+            autoComplete="name"
+            autoFocus
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
             id="email"
             label="Adresse E-mail"
             name="email"
@@ -95,6 +110,10 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
             label="Mot de passe"
             type="password"
             id="password"
+            error={errorPassword}
+            helperText={
+              errorPassword ? "Les mots de passes ne correspondent pas." : ""
+            }
             autoComplete="current-password"
             value={password}
             onChange={(e) => handlePassword(e.target.value)}
@@ -113,7 +132,7 @@ const SignUp: React.FC<SignUpComponentProps> = ({ isLogged }) => {
             type="password"
             id="confirmPassword"
             value={confirmPassword}
-            onChange={(e) => handleVerifyPassword(e.target.value)}
+            onChange={(e) => handleConfirmPassword(e.target.value)}
           />
           <Button
             type="submit"

@@ -43,7 +43,16 @@ async function start(): Promise<void> {
         if (typeof decoded === "object") {
           const currentUser = await db
             .getRepository(User)
-            .findOneBy({ id: decoded.userId });
+            .findOne({
+              relations: {
+                pages: {
+                  histories: true
+                }
+              },
+              where: {
+                id: decoded.userId
+              }
+            });
           if (currentUser !== null) context.currentUser = currentUser;
           return true;
         }
@@ -79,7 +88,7 @@ async function start(): Promise<void> {
     res.send("API HealthVisor 1.0");
   });
 
-  app.get('*', function(req, res){
+  app.get('*', function (req, res) {
     res.status(404).send('404 NOT FOUND :/');
   });
 

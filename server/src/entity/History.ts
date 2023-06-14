@@ -2,8 +2,7 @@ import { Field, ObjectType, InputType } from "type-graphql";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { MaxLength, MinLength } from "class-validator";
 import Page from "./Page";
-
-// import User from "./User";
+import User from "./User";
 
 @ObjectType()
 @Entity()
@@ -30,9 +29,29 @@ class History {
   })
   screenshot: string;
 
-  @Field(() => Page)
   @ManyToOne(() => Page, page => page.histories)
   page: Page;
+
+  @ManyToOne(() => User, user => user.histories)
+  user: User;
+}
+
+@ObjectType()
+export class HistoryAnonymous {
+  @Field()
+  status: string;
+
+  @Field()
+  date: Date;
+
+  @Field()
+  responseTime: number;
+
+  @Field()
+  screenshot: string;
+
+  @Field()
+  url: string;
 }
 
 @InputType()
@@ -57,5 +76,6 @@ export class HistoryInput {
   @Field()
   page: number;
 }
+
 
 export default History;

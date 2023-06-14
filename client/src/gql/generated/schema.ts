@@ -16,18 +16,22 @@ export type Scalars = {
   DateTime: any;
 };
 
-export type FetchInput = {
-  id: Scalars['Float'];
-};
-
 export type History = {
   __typename?: 'History';
   date: Scalars['DateTime'];
   id: Scalars['Float'];
-  page: Page;
   responseTime: Scalars['Float'];
   screenshot: Scalars['String'];
   status: Scalars['String'];
+};
+
+export type HistoryAnonymous = {
+  __typename?: 'HistoryAnonymous';
+  date: Scalars['DateTime'];
+  responseTime: Scalars['Float'];
+  screenshot: Scalars['String'];
+  status: Scalars['String'];
+  url: Scalars['String'];
 };
 
 export type HistoryInput = {
@@ -45,11 +49,17 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addPageToUser: History;
   createPage: Page;
   createUser: User;
-  getPage: History;
+  getPage: HistoryAnonymous;
   loginUser: Scalars['String'];
   logoutUser: Scalars['Boolean'];
+};
+
+
+export type MutationAddPageToUserArgs = {
+  url: PageInput;
 };
 
 
@@ -59,7 +69,7 @@ export type MutationCreatePageArgs = {
 
 
 export type MutationCreateUserArgs = {
-  data: SigninInput;
+  data: SignUpInput;
 };
 
 
@@ -78,6 +88,7 @@ export type Page = {
   id: Scalars['Float'];
   intervale: Scalars['Float'];
   url: Scalars['String'];
+  users: Array<User>;
 };
 
 export type PageInput = {
@@ -111,37 +122,37 @@ export type QueryFetchUserByIdArgs = {
   id: Scalars['Int'];
 };
 
+export type SignUpInput = {
 
-export type QueryGetUserPagesArgs = {
-  id: Scalars['Int'];
-};
-
-export type SigninInput = {
   email: Scalars['String'];
+  name: Scalars['String'];
   password: Scalars['String'];
 };
 
 export type User = {
   __typename?: 'User';
   email: Scalars['String'];
+  histories?: Maybe<Array<History>>;
   id: Scalars['Float'];
+  name: Scalars['String'];
+  pages?: Maybe<Array<Page>>;
   premium?: Maybe<Scalars['Boolean']>;
   role?: Maybe<Scalars['Float']>;
 };
 
-export type CreatePageMutationVariables = Exact<{
-  data: PageInput;
+export type AddPageToUserMutationVariables = Exact<{
+  url: PageInput;
 }>;
 
 
-export type CreatePageMutation = { __typename?: 'Mutation', createPage: { __typename?: 'Page', id: number, url: string, intervale: number } };
+export type AddPageToUserMutation = { __typename?: 'Mutation', addPageToUser: { __typename?: 'History', id: number, status: string, date: any, responseTime: number, screenshot: string } };
 
 export type CreateUserMutationVariables = Exact<{
-  data: SigninInput;
+  data: SignUpInput;
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', email: string, id: number } };
+export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', name: string, email: string, id: number } };
 
 export type HistoryQueryVariables = Exact<{
   fetchHistoryByIdId: Scalars['Int'];
@@ -169,12 +180,12 @@ export type GetPageMutationVariables = Exact<{
 }>;
 
 
-export type GetPageMutation = { __typename?: 'Mutation', getPage: { __typename?: 'History', id: number, status: string, date: any, responseTime: number, screenshot: string } };
+export type GetPageMutation = { __typename?: 'Mutation', getPage: { __typename?: 'HistoryAnonymous', status: string, date: any, responseTime: number, screenshot: string, url: string } };
 
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', email: string, id: number, premium?: boolean | null, role?: number | null } };
+export type GetProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: number, name: string, email: string, premium?: boolean | null, role?: number | null, pages?: Array<{ __typename?: 'Page', id: number, url: string, intervale: number, histories: Array<{ __typename?: 'History', id: number, status: string, date: any, responseTime: number, screenshot: string }> }> | null } };
 
 export type GetUserPagesQueryVariables = Exact<{
   id: Scalars['Int'];
@@ -186,7 +197,7 @@ export type GetUserPagesQuery = { __typename?: 'Query', getUserPages: Array<{ __
 export type UsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: number, email: string, premium?: boolean | null, role?: number | null }> };
+export type UsersQuery = { __typename?: 'Query', users: Array<{ __typename?: 'User', id: number, name: string, email: string, premium?: boolean | null, role?: number | null, pages?: Array<{ __typename?: 'Page', id: number, url: string, intervale: number, histories: Array<{ __typename?: 'History', id: number, status: string, date: any, responseTime: number, screenshot: string }> }> | null }> };
 
 export type LoginUserMutationVariables = Exact<{
   data: LoginInput;
@@ -201,44 +212,47 @@ export type LogoutUserMutationVariables = Exact<{ [key: string]: never; }>;
 export type LogoutUserMutation = { __typename?: 'Mutation', logoutUser: boolean };
 
 
-export const CreatePageDocument = gql`
-    mutation CreatePage($data: PageInput!) {
-  createPage(data: $data) {
+export const AddPageToUserDocument = gql`
+    mutation AddPageToUser($url: PageInput!) {
+  addPageToUser(url: $url) {
     id
-    url
-    intervale
+    status
+    date
+    responseTime
+    screenshot
   }
 }
     `;
-export type CreatePageMutationFn = Apollo.MutationFunction<CreatePageMutation, CreatePageMutationVariables>;
+export type AddPageToUserMutationFn = Apollo.MutationFunction<AddPageToUserMutation, AddPageToUserMutationVariables>;
 
 /**
- * __useCreatePageMutation__
+ * __useAddPageToUserMutation__
  *
- * To run a mutation, you first call `useCreatePageMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreatePageMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useAddPageToUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddPageToUserMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createPageMutation, { data, loading, error }] = useCreatePageMutation({
+ * const [addPageToUserMutation, { data, loading, error }] = useAddPageToUserMutation({
  *   variables: {
- *      data: // value for 'data'
+ *      url: // value for 'url'
  *   },
  * });
  */
-export function useCreatePageMutation(baseOptions?: Apollo.MutationHookOptions<CreatePageMutation, CreatePageMutationVariables>) {
+export function useAddPageToUserMutation(baseOptions?: Apollo.MutationHookOptions<AddPageToUserMutation, AddPageToUserMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreatePageMutation, CreatePageMutationVariables>(CreatePageDocument, options);
+        return Apollo.useMutation<AddPageToUserMutation, AddPageToUserMutationVariables>(AddPageToUserDocument, options);
       }
-export type CreatePageMutationHookResult = ReturnType<typeof useCreatePageMutation>;
-export type CreatePageMutationResult = Apollo.MutationResult<CreatePageMutation>;
-export type CreatePageMutationOptions = Apollo.BaseMutationOptions<CreatePageMutation, CreatePageMutationVariables>;
+export type AddPageToUserMutationHookResult = ReturnType<typeof useAddPageToUserMutation>;
+export type AddPageToUserMutationResult = Apollo.MutationResult<AddPageToUserMutation>;
+export type AddPageToUserMutationOptions = Apollo.BaseMutationOptions<AddPageToUserMutation, AddPageToUserMutationVariables>;
 export const CreateUserDocument = gql`
-    mutation CreateUser($data: SigninInput!) {
+    mutation CreateUser($data: SignUpInput!) {
   createUser(data: $data) {
+    name
     email
     id
   }
@@ -389,11 +403,11 @@ export type FetchUserByIdQueryResult = Apollo.QueryResult<FetchUserByIdQuery, Fe
 export const GetPageDocument = gql`
     mutation GetPage($data: PageInput!) {
   getPage(data: $data) {
-    id
     status
     date
     responseTime
     screenshot
+    url
   }
 }
     `;
@@ -426,10 +440,23 @@ export type GetPageMutationOptions = Apollo.BaseMutationOptions<GetPageMutation,
 export const GetProfileDocument = gql`
     query getProfile {
   profile {
-    email
     id
+    name
+    email
     premium
     role
+    pages {
+      id
+      url
+      intervale
+      histories {
+        id
+        status
+        date
+        responseTime
+        screenshot
+      }
+    }
   }
 }
     `;
@@ -501,9 +528,22 @@ export const UsersDocument = gql`
     query Users {
   users {
     id
+    name
     email
     premium
     role
+    pages {
+      id
+      url
+      intervale
+      histories {
+        id
+        status
+        date
+        responseTime
+        screenshot
+      }
+    }
   }
 }
     `;

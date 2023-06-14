@@ -1,0 +1,21 @@
+.search-box {
+    background-color: red;
+    animation: slidInFromTop .5s ease-out forwards;
+
+    .button-wrapper {
+        display: flex;
+        justify-content: space-around;
+    }
+}
+
+@keyframes slidInFromTop {
+    from {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

@@ -35,6 +35,7 @@ const Login: React.FC<LoginComponentProps> = ({ isLogged }) => {
     await loginUser({ variables: { data: { email, password } } });
     client.resetStore();
     isLogged();
+    window.location.reload();
   };
 
   return (

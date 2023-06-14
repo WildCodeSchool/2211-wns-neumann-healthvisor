@@ -9,13 +9,12 @@ import Page from "../entity/Page";
 export class HistoryResolver {
   @Query(() => [History])
   async History(): Promise<History[]> {
-    const pages = await datasource.getRepository(History).find({
+    const histories = await datasource.getRepository(History).find({
       relations: {
         page: true
       }
     });
-
-    return pages;
+    return histories;
   }
 
   @Query(() => History)
@@ -34,30 +33,30 @@ export class HistoryResolver {
   async fetchLastHistoryPageById(
     @Arg("id", () => Int) id: number
   ): Promise<History> {
+
     const page = await datasource.getRepository(Page).findOneBy({ id });
 
-    if (page) {
-      console.log(page);
+    if (!page) {
+      throw new ApolloError("Page does not exist", "PAGE_NOT_EXIST");
+    }
 
-      const existingHistory = await datasource
-        .getRepository(History)
-        .find({ where: { page: page } });
+    console.log(page);
 
-      console.log(existingHistory);
+    const existingHistory = await datasource
+      .getRepository(History)
+      .find({ where: { page: page } });
 
-      if (existingHistory.length !== 0) {
-        const latestHistory = existingHistory.reduce((prev, current) =>
-          prev.date > current.date ? prev : current
-        );
-        console.log(latestHistory);
-        return latestHistory;
-      } else {
-        throw new ApolloError("History does not exist", "HISTORY_NOT_EXIST");
-      }
-
-      // if (existingHistory == null)
-    } else {
+    if (existingHistory.length === 0) {
       throw new ApolloError("History does not exist", "HISTORY_NOT_EXIST");
     }
+
+    console.log(existingHistory);
+
+    const latestHistory = existingHistory.reduce((prev, current) =>
+      prev.date > current.date ? prev : current
+    );
+
+    console.log(latestHistory);
+    return latestHistory;
   }
 }

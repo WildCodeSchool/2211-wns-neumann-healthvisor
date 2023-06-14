@@ -1,8 +1,22 @@
 query getProfile {
-  profile {
-    email
+ profile {
     id
+    name
+    email
     premium
     role
+    pages {
+      id
+      url
+      intervale
+      histories {
+        id
+        status
+        date
+        responseTime
+        screenshot
+      }
+    }
+
   }
 }
