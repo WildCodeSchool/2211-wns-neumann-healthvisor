@@ -10,6 +10,8 @@ import { uuid } from "uuidv4";
 import fs from 'fs';
 import { ContextType } from '../index';
 import User from "../entity/User";
+import { RequestPage } from "../functions/axiosRequestPage";
+import { screenshot } from "../functions/screenshot";
 
 @Resolver(Page)
 export class PageResolver {
@@ -33,79 +35,16 @@ export class PageResolver {
   @Mutation(() => HistoryAnonymous)
   async getPage(@Arg("data") { url }: PageInput): Promise<HistoryAnonymous> {
 
-    const regexHTTP =
-      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
-    if (!url || !regexHTTP.test(url)) throw new ApolloError("URL not valid", "URL_NOT_VALID");
+    const axiosResult = await RequestPage(url);
 
-    if (url.endsWith('/')) {
-      url = url.substring(0, url.length - 1);
-    }
-
-    const startTime = Date.now();
-    const axiosResult = await axios
-      .get(url)
-      .then((res) => {
-        const endTime = Date.now();
-        const responseTime = endTime - startTime;
-        return {
-          status: res.status,
-          responseUrl: res.request.res.responseUrl,
-          redirectCount: res.request._redirectable._redirectCount,
-          responseTime,
-        };
-      })
-      .catch((err) => {
-        const endTime = Date.now();
-        const responseTime = endTime - startTime;
-        console.log(err.message);
-        return {
-          status: err.response.status,
-          responseUrl: err.request.res.responseUrl,
-          redirectCount: err.request._redirectable._redirectCount,
-          responseTime,
-        };
-      });
-
-    let screenshotName = "none";
-    const directoryName = join(__dirname, `../screenshot/`);
-
-    if (!fs.existsSync(directoryName)) {
-      fs.mkdir(directoryName, (err) => {
-        if (err) return console.log(err);
-        console.log('Le dossier à été crée avec succès');
-      })
-    }
-
-    try {
-      const browser = await puppeteer.launch({
-        headless: true,
-        executablePath: "/usr/bin/chromium-browser",
-        args: ["--no-sandbox", "--disabled-setupid-sandbox"],
-      });
-      const page = await browser.newPage();
-      await page.goto(url, { waitUntil: "networkidle2" });
-
-      await page.setViewport({
-        width: 1200,
-        height: 750,
-      });
-      screenshotName = uuid();
-      await page.screenshot({
-        path: join(__dirname, `../screenshot/${screenshotName}.png`),
-      });
-
-      await browser.close();
-      console.log("screenshot effectué");
-    } catch (err) {
-      console.error(err);
-    }
+    const screenshotPage = await screenshot(url);
 
     const history = {
       status: axiosResult.status,
       date: new Date(),
       responseTime: axiosResult.responseTime,
       url: url,
-      screenshot: screenshotName !== "none" ? `${screenshotName}.png` : "none",
+      screenshot: screenshotPage !== "none" ? `${screenshotPage}.png` : "none",
     };
 
     return history;
@@ -124,72 +63,9 @@ export class PageResolver {
 
     if (userDB === null) throw new ApolloError("User error", "USER_ERROR");
 
-    const regexHTTP =
-      /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,4}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g;
-    if (!url || !regexHTTP.test(url)) throw new ApolloError("URL not valid", "URL_NOT_VALID");
+    const axiosResult = await RequestPage(url);
 
-    if (url.endsWith('/')) {
-      url = url.substring(0, url.length - 1);
-    }
-
-    const startTime = Date.now();
-    const axiosResult = await axios
-      .get(url)
-      .then((res) => {
-        const endTime = Date.now();
-        const responseTime = endTime - startTime;
-        return {
-          status: res.status,
-          responseUrl: res.request.res.responseUrl,
-          redirectCount: res.request._redirectable._redirectCount,
-          responseTime,
-        };
-      })
-      .catch((err) => {
-        const endTime = Date.now();
-        const responseTime = endTime - startTime;
-        console.log(err.message);
-        return {
-          status: err.response.status,
-          responseUrl: err.request.res.responseUrl,
-          redirectCount: err.request._redirectable._redirectCount,
-          responseTime,
-        };
-      });
-
-    let screenshotName = "none";
-    const directoryName = join(__dirname, `../screenshot/`);
-
-    if (!fs.existsSync(directoryName)) {
-      fs.mkdir(directoryName, (err) => {
-        if (err) return console.log(err);
-        console.log('Le dossier à été crée avec succès');
-      })
-    }
-
-    try {
-      const browser = await puppeteer.launch({
-        headless: true,
-        executablePath: "/usr/bin/chromium-browser",
-        args: ["--no-sandbox", "--disabled-setupid-sandbox"],
-      });
-      const page = await browser.newPage();
-      await page.goto(url, { waitUntil: "networkidle2" });
-
-      await page.setViewport({
-        width: 1200,
-        height: 750,
-      });
-      screenshotName = uuid();
-      await page.screenshot({
-        path: join(__dirname, `../screenshot/${screenshotName}.png`),
-      });
-
-      await browser.close();
-      console.log("screenshot effectué");
-    } catch (err) {
-      console.error(err);
-    }
+    const screenshotPage = await screenshot(url);
 
     let page: Page;
     const existingPage = await datasource.getRepository(Page).findOneBy({ url });
@@ -205,7 +81,7 @@ export class PageResolver {
       date: new Date(),
       responseTime: axiosResult.responseTime,
       page: page,
-      screenshot: screenshotName !== "none" ? `${screenshotName}.png` : "none",
+      screenshot: screenshotPage !== "none" ? `${screenshotPage}.png` : "none",
       user: userDB
     });
 
