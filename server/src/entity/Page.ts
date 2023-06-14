@@ -4,8 +4,6 @@ import { MaxLength, MinLength } from "class-validator";
 import History from "./History";
 import User from "./User";
 
-import User from "./User";
-
 @ObjectType()
 @Entity()
 class Page {
