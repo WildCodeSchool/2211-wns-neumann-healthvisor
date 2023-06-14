@@ -19,7 +19,6 @@ export const RequestPage = async (url: string) => {
             return {
                 status: res.status,
                 responseUrl: res.request.res.responseUrl,
-                redirectCount: res.request._redirectable._redirectCount,
                 responseTime,
             };
         })
@@ -27,11 +26,18 @@ export const RequestPage = async (url: string) => {
             const endTime = Date.now();
             const responseTime = endTime - startTime;
             console.log(err.message);
+            if (err.response) {
+                return {
+                    status: err.response.status,
+                    responseUrl: err.request.res.responseUrl,
+                    responseTime,
+                };
+            }
             return {
-                status: err.response.status,
-                responseUrl: err.request.res.responseUrl,
-                redirectCount: err.request._redirectable._redirectCount,
+                status: "inaccessible", // ou un autre statut d'erreur que vous souhaitez utiliser
+                responseUrl: '', // ou une valeur par défaut appropriée
+                redirectCount: 0, // ou une valeur par défaut appropriée
                 responseTime,
-            };
+            }
         });
 }

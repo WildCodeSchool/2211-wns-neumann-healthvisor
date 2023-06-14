@@ -2,12 +2,7 @@ import { Resolver, Query, Arg, Mutation, Ctx, Authorized } from "type-graphql";
 import datasource from "../db";
 import Page, { PageInput } from "../entity/Page";
 import History, { HistoryAnonymous } from "../entity/History";
-import axios from "axios";
 import { ApolloError } from "apollo-server-errors";
-import puppeteer from "puppeteer";
-import { join } from "path";
-import { uuid } from "uuidv4";
-import fs from 'fs';
 import { ContextType } from '../index';
 import User from "../entity/User";
 import { RequestPage } from "../functions/axiosRequestPage";
@@ -37,7 +32,11 @@ export class PageResolver {
 
     const axiosResult = await RequestPage(url);
 
-    const screenshotPage = await screenshot(url);
+    let screenshotPage: string = "none";
+
+    if (axiosResult.status !== "inaccessible") {
+      screenshotPage = await screenshot(url);
+    }
 
     const history = {
       status: axiosResult.status,
@@ -65,7 +64,13 @@ export class PageResolver {
 
     const axiosResult = await RequestPage(url);
 
-    const screenshotPage = await screenshot(url);
+    let screenshotPage: string = "none";
+
+    if (axiosResult.status !== "inaccessible") {
+      screenshotPage = await screenshot(url);
+    }
+
+
 
     let page: Page;
     const existingPage = await datasource.getRepository(Page).findOneBy({ url });

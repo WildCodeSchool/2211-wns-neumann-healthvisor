@@ -14,6 +14,7 @@ import {
 } from "../../gql/generated/schema";
 import { Stack } from "@mui/system";
 import CardPage from "../CardPage/CardPage";
+import { message } from "../../functions/addFlash";
 
 interface ApiResponse {
   status: string;
@@ -49,9 +50,11 @@ const SearchBox = () => {
       });
       setUrlRequested(url);
       setLoading(false);
+      message("ca marche", "success");
     } catch (err) {
       console.log(err);
       setLoading(false);
+      message(err?.toString() as string, "error");
     }
   };
 

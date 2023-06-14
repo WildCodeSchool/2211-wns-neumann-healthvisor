@@ -20,6 +20,7 @@ const root = ReactDOM.createRoot(
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
+      <div id="add-flash"></div>
       <ApolloProvider client={apolloClient}>
         <Router>
           <Routes>

@@ -5,6 +5,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import HistoryItem from "../../components/HistoryItem/HistoryItem";
 import "./Historique.scss";
 import { formatDate } from "../../functions/formatDate";
+import indisponible from "../../assets/images/indisponible.png";
 
 const Historique = () => {
   const {
@@ -47,7 +48,11 @@ const Historique = () => {
         </div>
         <div className="card">
           <img
-            src={`${process.env.REACT_APP_SCREENSHOT_API}/${firstHistory.screenshot}`}
+            src={
+              firstHistory.screenshot === "none"
+                ? indisponible
+                : `${process.env.REACT_APP_SCREENSHOT_API}/${firstHistory.screenshot}`
+            }
             alt="page screenshot"
           />
           <div className="info">
