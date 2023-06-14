@@ -1,16 +1,18 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InfoIcon from "@mui/icons-material/Info";
+import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import HomeIcon from "@mui/icons-material/Home";
-import ContactIcon from "@mui/icons-material/ContactSupport";
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import CloseIcon from "@mui/icons-material/Close";
 import { useGetProfileQuery } from "../../gql/generated/schema";
 import "./Sidebar.scss";
 import { useNavigate } from "react-router-dom";
+import Modal from '@mui/material/Modal';
+import SearchBox from '../SearchBox/SearchBox';
 
 interface SidebarProps {
   open: boolean;
