@@ -10,6 +10,11 @@ import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import { useGetProfileQuery } from '../../gql/generated/schema';
 import './Sidebar.scss';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import SearchBox from '../SearchBox/SearchBox';
 
 interface SidebarProps {
   open: boolean;
@@ -19,9 +24,18 @@ interface SidebarProps {
 
 function Sidebar(props: SidebarProps) {
   const { open, onClose } = props;
+  const [isModalOpen, setIsModalOpen] = useState(false); // Add this line
   const { data: currentUser } = useGetProfileQuery({
     errorPolicy: "ignore",
   });
+
+  function handleModalOpen() {
+    setIsModalOpen(true);
+  }
+  
+  function handleModalClose() {
+    setIsModalOpen(false);
+  }
 
   return (
     <Fragment>
@@ -60,12 +74,20 @@ function Sidebar(props: SidebarProps) {
             </ListItemIcon>
             <ListItemText primary="Déconnection" />
           </ListItem>
-           {currentUser && (
-            <ListItem button onClick={onClose}>
-              <ListItemText primary={`Welcome, ${currentUser.profile.role}`} />
-            </ListItem>
-          )}
+          <ListItem button onClick={handleModalOpen}>
+            <ListItemIcon>
+              <LogoutRoundedIcon />
+            </ListItemIcon>
+            <ListItemText primary="Ajouter une page" />
+          </ListItem>
         </List>
+
+        <Modal
+          open={isModalOpen}
+          onClose={handleModalClose}
+        >
+          <SearchBox></SearchBox>
+        </Modal>
       </Drawer>
     </Fragment>
   );

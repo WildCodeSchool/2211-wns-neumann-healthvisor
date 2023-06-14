@@ -12,6 +12,8 @@ import {
   // useFetchLastHistoryPageByIdQuery,
 } from "../../gql/generated/schema";
 import { Stack } from "@mui/system";
+import { useCreatePageMutation } from "../../gql/generated/schema";
+
 
 interface ApiResponse {
   id: number;
@@ -27,6 +29,8 @@ const SearchBox = () => {
   const [response, setResponse] = useState<ApiResponse | null>(null);
 
   const [page] = useGetPageMutation();
+  const [createPage] = useCreatePageMutation();
+
 
   // const getLastHistory = async (id: number) => {
   //   const history = useFetchLastHistoryPageByIdQuery({
@@ -53,6 +57,22 @@ const SearchBox = () => {
     });
     
     // console.log(await pageCreated);
+  };
+
+  const addPage = async () => {
+    try {
+      // Save the data to the database
+      await createPage({ variables: { data: { url } }})
+  
+      // Clear the form fields and response data
+      setUrl("");
+      setResponse(null);
+  
+      // Optionally, you can show a success message or perform any additional actions
+    } catch (error) {
+      // Handle any errors that occur during the mutation
+      console.error("Error adding page:", error);
+    }
   };
 
   return (
@@ -99,8 +119,11 @@ const SearchBox = () => {
           <p>Date: {response?.date}</p>
           <img style={{width: "100%", height: "auto", objectFit: "contain"}} src={`http://localhost:4000/screenshot/${response?.screenshot}.png`} />
         </div> : <div></div>}
-        <Button type="submit" variant="contained" disabled={loading} fullWidth>
+        <Button type="submit" variant="contained" disabled={loading} >
           Recherchez
+        </Button>
+        <Button onClick={addPage} color="success" variant="contained" disabled={loading} >
+          Ajoutez
         </Button>
       </Box>
     </Box>

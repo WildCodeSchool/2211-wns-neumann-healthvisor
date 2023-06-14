@@ -71,4 +71,8 @@ export class UserResolver {
   async profile(@Ctx() { currentUser }: ContextType): Promise<User> {
     return currentUser as User;
   }
+
+  
 }
+
+export default UserResolver;

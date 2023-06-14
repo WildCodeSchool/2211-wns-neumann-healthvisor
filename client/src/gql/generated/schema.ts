@@ -24,6 +24,7 @@ export type History = {
   __typename?: 'History';
   date: Scalars['DateTime'];
   id: Scalars['Float'];
+  page: Page;
   responseTime: Scalars['Float'];
   screenshot: Scalars['String'];
   status: Scalars['String'];
@@ -73,6 +74,7 @@ export type MutationLoginUserArgs = {
 
 export type Page = {
   __typename?: 'Page';
+  histories: Array<History>;
   id: Scalars['Float'];
   intervale: Scalars['Float'];
   url: Scalars['String'];
@@ -126,6 +128,13 @@ export type User = {
   premium?: Maybe<Scalars['Boolean']>;
   role?: Maybe<Scalars['Float']>;
 };
+
+export type CreatePageMutationVariables = Exact<{
+  data: PageInput;
+}>;
+
+
+export type CreatePageMutation = { __typename?: 'Mutation', createPage: { __typename?: 'Page', id: number, url: string, intervale: number } };
 
 export type CreateUserMutationVariables = Exact<{
   data: SigninInput;
@@ -192,6 +201,41 @@ export type LogoutUserMutationVariables = Exact<{ [key: string]: never; }>;
 export type LogoutUserMutation = { __typename?: 'Mutation', logoutUser: boolean };
 
 
+export const CreatePageDocument = gql`
+    mutation CreatePage($data: PageInput!) {
+  createPage(data: $data) {
+    id
+    url
+    intervale
+  }
+}
+    `;
+export type CreatePageMutationFn = Apollo.MutationFunction<CreatePageMutation, CreatePageMutationVariables>;
+
+/**
+ * __useCreatePageMutation__
+ *
+ * To run a mutation, you first call `useCreatePageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreatePageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createPageMutation, { data, loading, error }] = useCreatePageMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreatePageMutation(baseOptions?: Apollo.MutationHookOptions<CreatePageMutation, CreatePageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreatePageMutation, CreatePageMutationVariables>(CreatePageDocument, options);
+      }
+export type CreatePageMutationHookResult = ReturnType<typeof useCreatePageMutation>;
+export type CreatePageMutationResult = Apollo.MutationResult<CreatePageMutation>;
+export type CreatePageMutationOptions = Apollo.BaseMutationOptions<CreatePageMutation, CreatePageMutationVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($data: SigninInput!) {
   createUser(data: $data) {

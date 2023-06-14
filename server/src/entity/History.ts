@@ -1,4 +1,4 @@
-import { Field, ObjectType, InputType, Float } from "type-graphql";
+import { Field, ObjectType, InputType } from "type-graphql";
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { MaxLength, MinLength } from "class-validator";
 import Page from "./Page";
