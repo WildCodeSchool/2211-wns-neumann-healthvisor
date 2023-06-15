@@ -1,24 +1,26 @@
-FROM node:lts-alpine
+FROM node:16.19-alpine
 
+RUN apk update && apk upgrade
 RUN apk --no-cache add curl
+RUN apk add make g++ python3 git 
+RUN npm i -g node-pre-gyp
 
 RUN mkdir /app
 WORKDIR /app
-COPY package*.json ./
-COPY .npmrc .npmrc
+
+COPY package*.json .
 
 RUN npm i
 RUN npm i -g serve
 
-COPY postcss.config.js postcss.config.js 
-COPY tsconfig.json tsconfig.json
-COPY tailwind.config.js tailwind.config.js
-COPY public public
-COPY codegen.yml codegen.yml
-COPY src src
+COPY src ./src
+COPY public ./public
+COPY tsconfig.json .
 
 ARG REACT_APP_GRAPHQL_API_URL
 ENV REACT_APP_GRAPHQL_API_URL ${REACT_APP_GRAPHQL_API_URL}
+ARG REACT_APP_SCREENSHOT_API
+ENV REACT_APP_SCREENSHOT_API ${REACT_APP_SCREENSHOT_API}
 
 RUN npm run build
 
