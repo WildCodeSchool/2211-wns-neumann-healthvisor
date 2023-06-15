@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import {
   Alert,
   Image,
@@ -18,9 +18,11 @@ import { Controller, useForm } from "react-hook-form";
 import {
   useLoginUserMutation,
   useGetProfileQuery,
+  useUpdateProfileMutation,
 } from "../gql/generated/schema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { registerForPushNotificationsAsync } from "../utils/notifications";
 
 interface FormData {
   email: string;
@@ -57,16 +59,25 @@ const LoginScreen = ({ navigation }: any) => {
   });
 
   const [loginUser] = useLoginUserMutation();
-  const { client } = useGetProfileQuery({
+  const [updateProfile] = useUpdateProfileMutation();
+  const { data: currentUser, client } = useGetProfileQuery({
     errorPolicy: "ignore",
   });
+
+  useEffect(() => {
+    registerForPushNotificationsAsync().then((expoNotificationToken) => {
+      if (expoNotificationToken) {
+        updateProfile({ variables: { data: { expoNotificationToken } } });
+      }
+    });
+  }, [currentUser?.profile.id]);
 
   const onSubmit = async ({ email, password }: FormData) => {
     try {
       await loginUser({ variables: { data: { email, password } } });
       client.resetStore();
       navigation.navigate("Home");
-      reset()
+      reset();
     } catch (error) {
       alert(`Une erreur est survenue :\n ${error}`);
     }

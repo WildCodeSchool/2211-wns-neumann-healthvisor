@@ -28,7 +28,7 @@ async function start(): Promise<void> {
 
   const schema = await buildSchema({
     resolvers: [join(__dirname, "/resolvers/*.ts")],
-    authChecker: async ({ context }: { context: ContextType }) => {
+    authChecker: async ({ context }: { context: ContextType }, roles = []) => {
       const {
         req: { headers },
       } = context;
@@ -41,19 +41,21 @@ async function start(): Promise<void> {
         const decoded = jwt.verify(token, env.JWT_PRIVATE_KEY) as JWTPayload;
 
         if (typeof decoded === "object") {
-          const currentUser = await db
-            .getRepository(User)
-            .findOne({
-              relations: {
-                pages: {
-                  histories: true
-                }
+          const currentUser = await db.getRepository(User).findOne({
+            relations: {
+              pages: {
+                histories: true,
               },
-              where: {
-                id: decoded.userId
-              }
-            });
-          if (currentUser !== null) context.currentUser = currentUser;
+            },
+            where: {
+              id: decoded.userId,
+            },
+          });
+          if (currentUser !== null) {
+            context.currentUser = currentUser          
+            return roles.length > 0 && roles.includes(currentUser.role);
+          };
+
           return true;
         }
       }
@@ -78,7 +80,7 @@ async function start(): Promise<void> {
     cors: {
       // origin: true,
       origin: env.CORS_ALLOWED_ORIGINS.split(","),
-      credentials: true
+      credentials: true,
     },
   });
 
@@ -88,8 +90,8 @@ async function start(): Promise<void> {
     res.send("API HealthVisor 1.0");
   });
 
-  app.get('*', function (req, res) {
-    res.status(404).send('404 NOT FOUND :/');
+  app.get("*", function (req, res) {
+    res.status(404).send("404 NOT FOUND :/");
   });
 
   app.listen({ port: 4000 }, () => {

@@ -5,6 +5,7 @@ import { argon2id, hash, verify } from "argon2";
 import Page from "./Page";
 
 import History from "./History";
+import { roles } from "../utilities/enum";
 
 @ObjectType()
 @Entity()
@@ -32,7 +33,8 @@ class User {
   @Field({ defaultValue: 0 })
   @Column({
     nullable: false,
-    default: 0
+    default: 0,
+    enum: roles
   })
   role: number;
 
@@ -45,7 +47,9 @@ class User {
   @OneToMany(() => History, history => history.user)
   histories?: History[];
 
-
+  @Field()
+  @Column({nullable: true})
+  expoNotificationToken: string;
 }
 
 @InputType()
@@ -67,6 +71,12 @@ export class SignUpInput {
 }
 
 @InputType()
+export class UpdateUserInput {
+  @Field()
+  expoNotificationToken: string;
+}
+
+@InputType()
 export class LoginInput {
   @Field()
   @IsEmail()
@@ -76,6 +86,22 @@ export class LoginInput {
   @Field()
   @MaxLength(200)
   password: string;
+}
+
+@InputType()
+export class NotificationInput {
+  @Field()
+  @IsNotEmpty()
+  title: string
+
+  @Field()
+  @IsNotEmpty()
+  body: string
+
+  @Field()
+  @IsNotEmpty()
+  JSONPayload: string
+
 }
 
 const hashOptions = {

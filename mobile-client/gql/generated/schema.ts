@@ -16,18 +16,22 @@ export type Scalars = {
   DateTime: any;
 };
 
-export type FetchInput = {
-  id: Scalars['Float'];
-};
-
 export type History = {
   __typename?: 'History';
   date: Scalars['DateTime'];
   id: Scalars['Float'];
-  page: Page;
   responseTime: Scalars['Float'];
   screenshot: Scalars['String'];
   status: Scalars['String'];
+};
+
+export type HistoryAnonymous = {
+  __typename?: 'HistoryAnonymous';
+  date: Scalars['DateTime'];
+  responseTime: Scalars['Float'];
+  screenshot: Scalars['String'];
+  status: Scalars['String'];
+  url: Scalars['String'];
 };
 
 export type HistoryInput = {
@@ -45,11 +49,18 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addPageToUser: History;
   createPage: Page;
   createUser: User;
-  getPage: History;
+  getPage: HistoryAnonymous;
   loginUser: Scalars['String'];
   logoutUser: Scalars['Boolean'];
+  updateProfile: User;
+};
+
+
+export type MutationAddPageToUserArgs = {
+  url: PageInput;
 };
 
 
@@ -59,7 +70,7 @@ export type MutationCreatePageArgs = {
 
 
 export type MutationCreateUserArgs = {
-  data: SigninInput;
+  data: SignUpInput;
 };
 
 
@@ -72,12 +83,18 @@ export type MutationLoginUserArgs = {
   data: LoginInput;
 };
 
+
+export type MutationUpdateProfileArgs = {
+  data: UpdateUserInput;
+};
+
 export type Page = {
   __typename?: 'Page';
   histories: Array<History>;
   id: Scalars['Float'];
   intervale: Scalars['Float'];
   url: Scalars['String'];
+  users: Array<User>;
 };
 
 export type PageInput = {
@@ -91,6 +108,7 @@ export type Query = {
   fetchHistoryById: History;
   fetchLastHistoryPageById: History;
   fetchUserById: User;
+  getUserPages: Array<Page>;
   profile: User;
   users: Array<User>;
 };
@@ -110,15 +128,29 @@ export type QueryFetchUserByIdArgs = {
   id: Scalars['Int'];
 };
 
-export type SigninInput = {
+
+export type QueryGetUserPagesArgs = {
+  id: Scalars['Int'];
+};
+
+export type SignUpInput = {
   email: Scalars['String'];
+  name: Scalars['String'];
   password: Scalars['String'];
+};
+
+export type UpdateUserInput = {
+  expoNotificationToken: Scalars['String'];
 };
 
 export type User = {
   __typename?: 'User';
   email: Scalars['String'];
+  expoNotificationToken: Scalars['String'];
+  histories?: Maybe<Array<History>>;
   id: Scalars['Float'];
+  name: Scalars['String'];
+  pages?: Maybe<Array<Page>>;
   premium?: Maybe<Scalars['Boolean']>;
   role?: Maybe<Scalars['Float']>;
 };
@@ -144,6 +176,13 @@ export type LogoutUserMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutUserMutation = { __typename?: 'Mutation', logoutUser: boolean };
+
+export type UpdateProfileMutationVariables = Exact<{
+  data: UpdateUserInput;
+}>;
+
+
+export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile: { __typename?: 'User', expoNotificationToken: string, id: number } };
 
 
 export const PageDocument = gql`
@@ -287,3 +326,37 @@ export function useLogoutUserMutation(baseOptions?: Apollo.MutationHookOptions<L
 export type LogoutUserMutationHookResult = ReturnType<typeof useLogoutUserMutation>;
 export type LogoutUserMutationResult = Apollo.MutationResult<LogoutUserMutation>;
 export type LogoutUserMutationOptions = Apollo.BaseMutationOptions<LogoutUserMutation, LogoutUserMutationVariables>;
+export const UpdateProfileDocument = gql`
+    mutation UpdateProfile($data: UpdateUserInput!) {
+  updateProfile(data: $data) {
+    expoNotificationToken
+    id
+  }
+}
+    `;
+export type UpdateProfileMutationFn = Apollo.MutationFunction<UpdateProfileMutation, UpdateProfileMutationVariables>;
+
+/**
+ * __useUpdateProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProfileMutation, { data, loading, error }] = useUpdateProfileMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProfileMutation, UpdateProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProfileMutation, UpdateProfileMutationVariables>(UpdateProfileDocument, options);
+      }
+export type UpdateProfileMutationHookResult = ReturnType<typeof useUpdateProfileMutation>;
+export type UpdateProfileMutationResult = Apollo.MutationResult<UpdateProfileMutation>;
+export type UpdateProfileMutationOptions = Apollo.BaseMutationOptions<UpdateProfileMutation, UpdateProfileMutationVariables>;
