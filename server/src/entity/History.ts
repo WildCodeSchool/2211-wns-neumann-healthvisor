@@ -39,10 +39,6 @@ class History {
 @ObjectType()
 export class HistoryAnonymous {
   @Field()
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @Field()
   status: string;
 
   @Field()
