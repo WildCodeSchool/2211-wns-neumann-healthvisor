@@ -5,6 +5,7 @@ import { StatusBar } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import PageListe from "./PageListeScreen";
 import AccountScreen from "./AccountScreen";
+import NotificationsScreen from "./NotificationsScreen";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 const HomeScreen = ({ navigation }: any) => {
@@ -28,6 +29,7 @@ const HomeScreen = ({ navigation }: any) => {
       })}
     >
       <Tab.Screen name="Pages" component={PageListe} options={{ headerShown: false }}/>
+      <Tab.Screen name="Notifications" component={NotificationsScreen} options={{ headerShown: false }}/>
       <Tab.Screen name="Mon compte" component={AccountScreen} options={{ headerShown: false }}/>
       {/* <StatusBar style="auto" /> */}
     </Tab.Navigator>
