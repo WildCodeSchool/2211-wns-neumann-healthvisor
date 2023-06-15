@@ -8,7 +8,6 @@ RUN mkdir /server
 WORKDIR /server
 
 COPY ./server/package.json ./package.json
-COPY ./server/pnpm-lock.yaml ./pnpm-lock.yaml
 
 RUN npm i -g pnpm
 RUN pnpm i
