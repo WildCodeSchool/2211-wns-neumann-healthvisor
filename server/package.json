@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
+    "build": "tsc",
     "start": "ts-node-dev --poll src/index.ts",
     "resetDB": "ts-node-dev src/resetDB.ts"
   },

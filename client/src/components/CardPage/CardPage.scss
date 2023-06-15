@@ -1,6 +1,7 @@
+
 .card-page {
     position: relative;
-    max-width: 500px;
+    width: 500px;
     height: 300px;
     margin: 20px 0;
     transition: all .3s ease-in-out;
@@ -40,7 +41,6 @@
             align-items: center;
 
             .status {
-                background-color: #26E735;
                 border-radius: 4px;
                 padding: 5px 10px;
                 font-size: 14px;

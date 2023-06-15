@@ -2,8 +2,10 @@
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border: 1px solid black;
     margin: 20px 10px;
+    padding: 10px 5px;
+    background-color: rgb(243, 243, 218);
+    border-radius: 5px;
 
     .date,
     .response-time {

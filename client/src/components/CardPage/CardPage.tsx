@@ -1,5 +1,7 @@
+
 import React from "react";
 import "./CardPage.scss";
+import indisponible from "../../assets/images/indisponible.png";
 
 const CardPage = ({
   infos: { screenshot, status, responseTime },
@@ -8,7 +10,11 @@ const CardPage = ({
   return (
     <div className="card-page">
       <img
-        src={`${process.env.REACT_APP_SCREENSHOT_API}/${screenshot}`}
+        src={
+          screenshot === "none"
+            ? indisponible
+            : `${process.env.REACT_APP_SCREENSHOT_API}/${screenshot}`
+        }
         alt="page screenshot"
       />
       <div className="info">
