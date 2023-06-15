@@ -118,7 +118,6 @@ export class UserResolver {
       .save({ ...currentUser, expoNotificationToken });
   }
 
-  // @Authorized(<roles>(roles.ROLE_ADMIN))
   @Authorized<roles[]>([roles.ROLE_ADMIN])
   @Mutation(() => Boolean)
   async sendNotification(
@@ -137,7 +136,7 @@ export class UserResolver {
     try {
       await expo.sendPushNotificationsAsync([
         {
-          to: "ExponentPushToken[uyWviUAT9x8XNVCs-SIres]",
+          to: user.expoNotificationToken,
           title: data.title,
           body: data.body,
           data:
