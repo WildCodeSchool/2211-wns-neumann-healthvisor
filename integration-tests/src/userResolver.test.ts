@@ -35,7 +35,13 @@ describe("User resolver", () => {
     it("should create user given valid attributes", async () => {
       const res = await client.mutate({
         mutation: createUserMutation,
-        variables: { data: { mail: "mail@mail.fr", password: "Azerty123" } },
+        variables: {
+          data: {
+            name: "testName",
+            mail: "mail@mail.fr",
+            password: "Azerty123",
+          },
+        },
       });
 
       expect(res.data?.createUser).toHaveProperty("id");
@@ -54,14 +60,14 @@ describe("User resolver", () => {
   });
 
   describe("read users", () => {
-    xit("should return an authentification token",async () => {
+    xit("should return an authentification token", async () => {
       const res = await client.mutate({
         mutation: loginUser,
         variables: { data: { email: "mail@mail.fr", password: "Azerty123" } },
       });
 
       const token = res?.data?.loginUser;
-      expect(token).toBeDefined(); 
-    })
+      expect(token).toBeDefined();
+    });
   });
 });
