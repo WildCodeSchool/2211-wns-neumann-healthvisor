@@ -1,0 +1,16 @@
+#dashboard {
+    position: relative;
+    width: 100%;
+    background-color: grey;
+    min-height: 100vh;
+
+    .card-page-wrapper {
+        position: relative;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+}

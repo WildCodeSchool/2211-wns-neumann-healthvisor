@@ -1,0 +1,7 @@
+query GetUserPages($id: Int!) {
+  getUserPages(id: $id) {
+    id
+    intervale
+    url
+  }
+}

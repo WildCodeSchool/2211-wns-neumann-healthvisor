@@ -1,0 +1,7 @@
+mutation CreatePage($data: PageInput!) {
+  createPage(data: $data) {
+    id
+    url
+    intervale
+  }
+}

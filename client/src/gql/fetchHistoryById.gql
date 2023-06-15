@@ -1,0 +1,9 @@
+query History($fetchHistoryByIdId: Int!) {
+  fetchHistoryById(id: $fetchHistoryByIdId) {
+    date
+    id
+    responseTime
+    screenshot
+    status
+  }
+}

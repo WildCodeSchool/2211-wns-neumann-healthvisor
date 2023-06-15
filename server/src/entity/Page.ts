@@ -1,5 +1,7 @@
 import { Field, ObjectType, InputType } from "type-graphql";
-import { Column, Entity, PrimaryGeneratedColumn, ManyToMany, JoinTable } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { MaxLength, MinLength } from "class-validator";
+import History from "./History";
 import User from "./User";
 
 @ObjectType()
@@ -11,17 +13,29 @@ class Page {
 
     @Field()
     @Column()
+    @MaxLength(200)
+    @MinLength(5)
     url: string;
 
-    // @ManyToMany(() => User)
-    // @JoinTable
-    // users: User[];
+    @Field()
+    @Column({ default: 1 })
+    intervale: number;
+
+    @Field(() => [History])
+    @OneToMany(() => History, history => history.page)
+    histories: History[];
+
+    @Field(() => [User])
+    @ManyToMany(() => User, user => user.pages)
+    users: User[];
 }
 
 @InputType()
 export class PageInput {
     @Field()
-    temps: number;
+    @MaxLength(200)
+    @MinLength(5)
+    url: string;
 }
 
 export default Page

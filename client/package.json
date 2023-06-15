@@ -6,6 +6,8 @@
     "@apollo/client": "^3.7.3",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@fontsource/roboto": "^4.5.8",
+    "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.11.8",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -26,10 +28,11 @@
     "@graphql-codegen/cli": "2.6.1",
     "@graphql-codegen/typescript": "2.4.3",
     "@graphql-codegen/typescript-operations": "2.3.0",
-    "@graphql-codegen/typescript-react-apollo": "3.2.5"
+    "@graphql-codegen/typescript-react-apollo": "3.2.5",
+    "sass": "^1.59.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "WATCHPACK_POLLING=true react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",

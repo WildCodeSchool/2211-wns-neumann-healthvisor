@@ -1,7 +1,10 @@
 import { Field, ObjectType, InputType } from "type-graphql";
 import { MaxLength, MinLength, IsEmail, IsNotEmpty } from "class-validator";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
-import { hash, verify } from "argon2";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { argon2id, hash, verify } from "argon2";
+import Page from "./Page";
+
+import History from "./History";
 
 @ObjectType()
 @Entity()
@@ -11,32 +14,58 @@ class User {
   id: number;
 
   @Field()
+  @Column({ length: 100 })
+  name: string;
+
+  @Field()
   @IsEmail()
   @Column({ length: 100 })
   email: string;
 
-  @Column({ length: 200 })
+  @Column({ length: 255 })
   password: string;
 
-  @Field()
-  @Column()
+  @Field({ defaultValue: false })
+  @Column({ default: false })
   premium: boolean;
+
+  @Field({ defaultValue: 0 })
+  @Column({
+    nullable: false,
+    default: 0
+  })
+  role: number;
+
+  @Field(() => [Page], { nullable: true })
+  @ManyToMany(() => Page, page => page.users)
+  @JoinTable()
+  pages?: Page[];
+
+  @Field(() => [History], { nullable: true })
+  @OneToMany(() => History, history => history.user)
+  histories?: History[];
+
+  @Field()
+  @Column({nullable: true})
+  expoNotificationToken: string;
 }
 
 @InputType()
-export class UserInput {
+export class SignUpInput {
+  @Field()
+  @IsNotEmpty()
+  @MaxLength(200)
+  name: string;
+
   @Field()
   @IsEmail()
   @IsNotEmpty()
   email: string;
 
   @Field()
-  @MaxLength(200)
+  @MaxLength(255)
   @MinLength(8)
   password: string;
-
-  @Field()
-  premium: boolean;
 }
 
 @InputType()
@@ -48,19 +77,41 @@ export class LoginInput {
 
   @Field()
   @MaxLength(200)
-  @MinLength(8)
   password: string;
 }
 
-const hashOptions =  {
-  memoryCost: 2 **16
+@InputType()
+export class NotificationInput {
+  @Field()
+  @IsNotEmpty()
+  title: string
+
+  @Field()
+  @IsNotEmpty()
+  body: string
+
+  @Field()
+  @IsNotEmpty()
+  JSONPayload: string
+
+}
+
+@InputType()
+export class UpdateUserInput {
+  @Field()
+  expoNotificationToken: string;
+}
+
+const hashOptions = {
+  type: argon2id,
+  memoryCost: 2 ** 16
 }
 
 export const hashPassword = async (plain: string): Promise<string> => {
   return await hash(plain, hashOptions);
 }
 
-export const verifyPassword = async (hashedPassword: string, plain: string ): Promise<boolean> => {
+export const verifyPassword = async (hashedPassword: string, plain: string): Promise<boolean> => {
 
   return await verify(hashedPassword, plain, hashOptions);
 

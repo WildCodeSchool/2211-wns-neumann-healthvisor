@@ -1,0 +1,14 @@
+query Page {
+  Page {
+    id
+    url
+    intervale
+    histories {
+      id
+      status
+      date
+      responseTime
+      screenshot
+    }
+  }
+}
