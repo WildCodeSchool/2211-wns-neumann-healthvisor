@@ -76,8 +76,8 @@ async function start(): Promise<void> {
   server.applyMiddleware({
     app,
     cors: {
-      // origin: true,
-      origin: env.CORS_ALLOWED_ORIGINS.split(","),
+      origin: true,
+      // origin: env.CORS_ALLOWED_ORIGINS.split(","),
       credentials: true
     },
   });

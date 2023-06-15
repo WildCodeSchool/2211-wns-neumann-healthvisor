@@ -1,16 +1,19 @@
-import React, { Fragment } from "react";
+
+import React, { Fragment, useState } from "react";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InfoIcon from "@mui/icons-material/Info";
+import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import HomeIcon from "@mui/icons-material/Home";
-import ContactIcon from "@mui/icons-material/ContactSupport";
+import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import CloseIcon from "@mui/icons-material/Close";
 import { useGetProfileQuery } from "../../gql/generated/schema";
 import "./Sidebar.scss";
 import { useNavigate } from "react-router-dom";
+import Modal from '@mui/material/Modal';
+import SearchBox from '../SearchBox/SearchBox';
 
 interface SidebarProps {
   open: boolean;
@@ -20,10 +23,19 @@ interface SidebarProps {
 
 function Sidebar(props: SidebarProps) {
   const { open, onClose } = props;
+  const [isModalOpen, setIsModalOpen] = useState(false); // Add this line
   const { data: currentUser } = useGetProfileQuery({
     errorPolicy: "ignore",
   });
   const navigate = useNavigate();
+
+  function handleModalOpen() {
+    setIsModalOpen(true);
+  }
+  
+  function handleModalClose() {
+    setIsModalOpen(false);
+  }
 
   return (
     <Fragment>
@@ -53,9 +65,15 @@ function Sidebar(props: SidebarProps) {
 
           </ListItem>
           <ListItem button onClick={onClose}>
+            <ListItemIcon>
+              <AccountBoxRoundedIcon />
+            </ListItemIcon>
             <ListItemText primary="Profle" />
           </ListItem>
           <ListItem button onClick={onClose}>
+            <ListItemIcon>
+              <LogoutRoundedIcon />
+            </ListItemIcon>
             <ListItemText primary="Déconnection" />
           </ListItem>
           {currentUser && (
@@ -64,9 +82,17 @@ function Sidebar(props: SidebarProps) {
             </ListItem>
           )}
         </List>
+
+        <Modal
+          open={isModalOpen}
+          onClose={handleModalClose}
+        >
+          <SearchBox></SearchBox>
+        </Modal>
       </Drawer>
     </Fragment>
   );
 }
 
 export default Sidebar;
+

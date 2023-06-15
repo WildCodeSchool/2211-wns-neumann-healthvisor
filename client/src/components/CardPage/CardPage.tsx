@@ -1,3 +1,4 @@
+
 import React from "react";
 import "./CardPage.scss";
 import indisponible from "../../assets/images/indisponible.png";
