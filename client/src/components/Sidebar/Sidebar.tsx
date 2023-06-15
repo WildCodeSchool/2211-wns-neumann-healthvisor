@@ -83,12 +83,12 @@ function Sidebar(props: SidebarProps) {
           )}
         </List>
 
-        <Modal
+        {/* <Modal
           open={isModalOpen}
           onClose={handleModalClose}
         >
           <SearchBox></SearchBox>
-        </Modal>
+        </Modal> */}
       </Drawer>
     </Fragment>
   );

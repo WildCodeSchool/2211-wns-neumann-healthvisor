@@ -45,7 +45,9 @@ class User {
   @OneToMany(() => History, history => history.user)
   histories?: History[];
 
-
+  @Field()
+  @Column({nullable: true})
+  expoNotificationToken: string;
 }
 
 @InputType()
@@ -76,6 +78,28 @@ export class LoginInput {
   @Field()
   @MaxLength(200)
   password: string;
+}
+
+@InputType()
+export class NotificationInput {
+  @Field()
+  @IsNotEmpty()
+  title: string
+
+  @Field()
+  @IsNotEmpty()
+  body: string
+
+  @Field()
+  @IsNotEmpty()
+  JSONPayload: string
+
+}
+
+@InputType()
+export class UpdateUserInput {
+  @Field()
+  expoNotificationToken: string;
 }
 
 const hashOptions = {

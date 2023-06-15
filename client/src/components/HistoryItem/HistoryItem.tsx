@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import "./HistoryItem.scss";
 import { formatDate } from "../../functions/formatDate";
 import indisponible from "../../assets/images/indisponible.png";

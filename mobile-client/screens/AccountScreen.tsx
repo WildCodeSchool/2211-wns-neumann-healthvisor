@@ -17,17 +17,19 @@ const AccountScreen = ({ navigation }: any) => {
     client.resetStore();
     navigation.navigate("Login");
   };
+
+  console.log(currentUser);
+
   return (
     <SafeAreaView>
       <View>
         <Text>AccountScreen</Text>
         <Text>
-            { currentUser && 
+          {currentUser &&
             `
             Role: ${currentUser.profile.role}
             Email: ${currentUser.profile.email}            
-            `
-            }
+            `}
         </Text>
         <Button title="Deconnexion" onPress={() => logout()} />
       </View>
