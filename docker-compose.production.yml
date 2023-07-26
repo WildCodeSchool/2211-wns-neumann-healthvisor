@@ -22,7 +22,7 @@ services:
         condition: service_healthy
     environment:
       - NODE_ENV=${NODE_ENV:-production}
-      - DB_HOST=${DB_HOST:-stagingDB}
+      - DB_HOST=${DB_HOST:-prodDB}
       - DB_USER=${DB_USER:-postgres}
       - DB_PASS=${DB_PASS:-postgres}
       - DB_NAME=${DB_NAME:-postgres}
