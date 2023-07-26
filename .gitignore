@@ -6,3 +6,6 @@ mobile-client/.idea/codeStyles/codeStyleConfig.xml
 mobile-client/.idea/codeStyles/Project.xml
 mobile-client/package-lock.json
 integration-tests/package-lock.json
+logs
+.env.production
+.env.staging
