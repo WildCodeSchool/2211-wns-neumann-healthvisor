@@ -11,6 +11,9 @@ import { env } from "./env";
 import User from "./entity/User";
 import cookie from "cookie";
 import { Any } from "typeorm";
+import { HistoryResolver } from "./resolvers/historyResolver";
+import { PageResolver } from "./resolvers/pageResolver";
+import UserResolver from "./resolvers/userResolver";
 
 export interface JWTPayload {
   userId: number;
@@ -28,7 +31,8 @@ async function start(): Promise<void> {
   await db.initialize();
 
   const schema = await buildSchema({
-    resolvers: [join(__dirname, "/resolvers/*.ts")],
+    // resolvers: [join(__dirname, "/resolvers/*.ts")],
+    resolvers: [HistoryResolver, PageResolver, UserResolver],
     authChecker: async (
       { context }: { context: ContextType },
       roles: number[] = []

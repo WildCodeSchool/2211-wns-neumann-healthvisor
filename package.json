@@ -7,6 +7,9 @@
     "integration-tests:backend-only": "docker compose -f docker-compose.integration-tests.yml up testDB backend",
     "e2e-tests": "REACT_APP_GRAPHQL_API_URL=http://host.docker.internal:4000 docker compose -f docker-compose.e2e-tests.yml up --build --exit-code-from testrunner --remove-orphans",
     "e2e-tests:app-only": "docker compose -f docker-compose.e2e-tests.yml up testDB backend client --build   --remove-orphans",
+    "publish:server": "cd server && docker build -f Dockerfile.production . -t rhamdoud/2211-wns-neumann-healthvisor-server && docker push rhamdoud/2211-wns-neumann-healthvisor-server && cd ..",
+    "publish:client": "cd client && docker build -f Dockerfile.production . -t rhamdoud/2211-wns-neumann-healthvisor-client && docker push rhamdoud/2211-wns-neumann-healthvisor-client && cd ..",
+    "start:prod": "docker compose -f docker-compose.production.yml pull && docker compose -f docker-compose.production.yml --env-file .env.production up",
     "start": "docker compose -f docker-compose.yml up --build"
   }
 }

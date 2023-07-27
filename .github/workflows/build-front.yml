@@ -25,4 +25,4 @@ jobs:
             "REACT_APP_GRAPHQL_API_URL=https://pierre.wns.wilders.dev/graphql"
           context: "{{defaultContext}}:client"
           file: "Dockerfile.production"
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/wns-livecodings-nov22-client
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/2211-wns-neumann-healthvisor-client
