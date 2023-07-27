@@ -1,7 +1,10 @@
-import 'dotenv/config';
+import "dotenv/config";
 import { DataSource } from "typeorm";
 import { join } from "path";
-import { env } from "./env"
+import { env } from "./env";
+import History from "./entity/History";
+import Page from "./entity/Page";
+import User from "./entity/User";
 
 const datasource = new DataSource({
   type: "postgres",
@@ -11,7 +14,8 @@ const datasource = new DataSource({
   password: env.DB_PASS,
   database: env.DB_NAME,
   synchronize: true,
-  entities: [join(__dirname, "/entity/*.ts")],
+  // entities: [join(__dirname, "/entity/*.ts")],
+  entities: [History, Page, User],
   logging: ["query", "error"],
 });
 
