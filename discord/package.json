@@ -1,0 +1,18 @@
+{
+  "name": "bot-discord",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "send-message" : "node main.js",
+    "send-production" : "node main.js 'Deployment completed",
+    "send-test": "node main.js 'message de test'"
+  },
+  "type": "module",
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^14.13.0",
+    "dotenv": "^16.3.1"
+  }
+}
