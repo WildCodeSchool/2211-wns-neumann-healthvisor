@@ -58,5 +58,14 @@ services:
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./logs:/var/log/nginx
 
+  #discord
+  discord:
+    depends_on:
+      nginx:
+        condition: service_started
+    image: rhamdoud/2211-wns-neumann-discord
+    command: >
+      sh -c "npm run send-production"
+
 volumes:
   prodDB:

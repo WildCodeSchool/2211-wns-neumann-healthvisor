@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "send-message" : "node main.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "send-production" : "node main.js 'Deployment completed",
+    "send-test": "node main.js 'message de test'"
   },
   "type": "module",
   "author": "",
