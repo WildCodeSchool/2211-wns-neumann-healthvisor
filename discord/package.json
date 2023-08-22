@@ -5,7 +5,7 @@
   "main": "main.js",
   "scripts": {
     "send-message" : "node main.js",
-    "send-production" : "node main.js 'Deployment completed",
+    "send-production" : "node main.js 'HealthVisor - Deployment completed'",
     "send-test": "node main.js 'message de test'"
   },
   "type": "module",

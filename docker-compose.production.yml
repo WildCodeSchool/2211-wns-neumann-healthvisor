@@ -63,7 +63,7 @@ services:
     depends_on:
       nginx:
         condition: service_started
-    image: rhamdoud/2211-wns-neumann-discord
+    image: rhamdoud/2211-wns-neumann-healthvisor-discord
     command: >
       sh -c "npm run send-production"
 
