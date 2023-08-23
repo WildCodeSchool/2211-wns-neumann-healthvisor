@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { ReactElement, useState } from "react";
 import { useLocation } from "react-router-dom";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import MenuIcon from "@mui/icons-material/Menu";
@@ -17,15 +16,16 @@ const Historique = () => {
   const reversedHistories = [...page.histories].reverse();
   const firstHistory = reversedHistories[0];
 
-  const intervales = [];
+  const intervales = [1, 15, 30, 60];
+  let intervalesElements: ReactElement[] = [];
 
-  for (let i = 1; i < 61; i++) {
-    intervales.push(
-      <option key={i} value={i}>
-        {i} min
+  intervales.forEach((intervale, index) => {
+    intervalesElements[index] = (
+      <option key={intervale} value={intervale}>
+        {intervale} min
       </option>
     );
-  }
+  });
 
   const handlerOpenSidebar = () => {
     setOpen(true);
@@ -42,7 +42,7 @@ const Historique = () => {
           <h1>{formatDate(firstHistory.date)}</h1>
           <p>Modifiez l'intervale:</p>
           <select name="intervale" id="intervale">
-            {intervales}
+            {intervalesElements}
           </select>
         </div>
         <div className="card">
@@ -85,4 +85,3 @@ const Historique = () => {
 };
 
 export default Historique;
-

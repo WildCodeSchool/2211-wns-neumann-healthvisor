@@ -9,6 +9,7 @@ import User from "../entity/User";
 import { RequestPage } from "../functions/axiosRequestPage";
 import { screenshot } from "../functions/screenshot";
 import { Job } from "pg-boss";
+import getCron from "../functions/getCron";
 
 const options = { teamSize: 5, teamConcurrency: 5 };
 
@@ -129,6 +130,7 @@ export class PageResolver {
     @Ctx() { currentUser }: ContextType,
     @Arg("url") { url }: PageInput
   ): Promise<History> {
+
     if (typeof currentUser === "undefined")
       throw new ApolloError("User error", "USER_ERROR");
 
@@ -158,12 +160,16 @@ export class PageResolver {
       page = existingPage;
     }
 
+    const intervale = getCron(page.intervale);
+    if (!intervale)
+      throw new ApolloError("Interval error", "PARAM_ERROR");
+    
     //pgboss
     const idString = page.id.toString();
     await boss.work(`r-${idString}`, options, requestJob);
     await boss.schedule(
       `r-${idString}`,
-      `* * * * *`,
+      intervale,
       { page, user: userDB },
       { tz: "Europe/Paris" }
     );
