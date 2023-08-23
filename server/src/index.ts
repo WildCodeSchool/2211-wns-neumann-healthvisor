@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import db from "./db";
+// import boss from "./db-boss";
 import { ApolloServer } from "apollo-server-express";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import { buildSchema } from "type-graphql";
@@ -14,6 +15,8 @@ import { Any } from "typeorm";
 import { HistoryResolver } from "./resolvers/historyResolver";
 import { PageResolver } from "./resolvers/pageResolver";
 import UserResolver from "./resolvers/userResolver";
+import { Job } from "pg-boss";
+import { RequestPage } from "./functions/axiosRequestPage";
 
 export interface JWTPayload {
   userId: number;
@@ -25,10 +28,55 @@ export interface ContextType {
   currentUser?: User;
 }
 
+// async function someAsyncJobHandler(job: Job) {
+//   console.log(`job ${job.id} received with data:`);
+//   console.log(JSON.stringify(job.data));
+
+//   await console.log(job.data);
+// }
+
+async function requestJob(job: Job) {
+  // console.log(`job ${job.id} received with data:`);
+  // console.log(JSON.stringify(job.data));
+  // const site = job.data.site;
+  const site = (job.data as any).site;
+  const result = await RequestPage(site);
+  console.log(result);
+  console.log(new Date());
+}
+
 async function start(): Promise<void> {
   console.log("Starting...");
 
   await db.initialize();
+
+  // boss.on("error", (error: any) => console.error(error));
+
+  // await boss.start();
+
+  // // TEMP
+  // // const queue = "some-queue";
+  // const queueUn = "un";
+  // const queueDeux = "deux";
+  // // let jobId = await boss.send(queue, { param1: "foo" });
+  // // console.log(`created job in queue ${queue}: ${jobId}`);
+  // // await boss.work(queue, someAsyncJobHandler);
+  // await boss.work(queueUn, requestJob);
+  // await boss.work(queueDeux, requestJob);
+
+  // await boss.schedule(
+  //   "un",
+  //   `* * * * *`,
+  //   { site: "http://www.google.fr" },
+  //   { tz: "Europe/Paris" }
+  // );
+  // await boss.schedule(
+  //   "deux",
+  //   `* * * * *`,
+  //   { site: "http://www.dealabs.fr" },
+  //   { tz: "Europe/Paris" }
+  // );
+  // // FIN TEMP
 
   const schema = await buildSchema({
     // resolvers: [join(__dirname, "/resolvers/*.ts")],
