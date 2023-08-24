@@ -2,15 +2,16 @@ $sidebar-width: 240px;
 
 .root {
   display: flex;
-  height: 100vh;
+  height: 100%;
   overflow: hidden;
 
   .sidebar {
-    width: $sidebar-width;
+    flex: 0 0 240px;
   }
 
   .content {
     flex-grow: 1;
-    padding: 3px;
+    // padding: 3px;
+    overflow-y: auto;
   }
 }

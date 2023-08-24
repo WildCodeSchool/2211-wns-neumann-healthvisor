@@ -14,6 +14,7 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import { ThemeProvider } from "@mui/system";
 import Historique from "./pages/Historique/Historique";
+import AppLayout from "./components/AppLayout/AppLayout";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -26,8 +27,16 @@ root.render(
         <Router>
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/page" element={<Historique />} />
+            <Route path="/dashboard" element={
+                <AppLayout>
+                  <Dashboard />
+                </AppLayout>
+              } />
+            <Route path="/page" element={
+                <AppLayout>
+                  <Historique />
+                </AppLayout>
+              } />
           </Routes>
         </Router>
       </ApolloProvider>

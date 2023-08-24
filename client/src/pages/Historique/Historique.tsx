@@ -37,8 +37,6 @@ const Historique = () => {
 
   return (
     <div className="historique">
-      <Sidebar open={open} onClose={() => handlerCloseSidebar()} />
-      <MenuIcon fontSize="large" onClick={() => handlerOpenSidebar()} />
       <div className="last-history">
         <div className="date-last-history">
           <h1>{formatDate(firstHistory.date)}</h1>

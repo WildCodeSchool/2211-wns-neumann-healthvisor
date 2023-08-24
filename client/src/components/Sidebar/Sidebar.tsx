@@ -9,11 +9,12 @@ import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import HomeIcon from "@mui/icons-material/Home";
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import CloseIcon from "@mui/icons-material/Close";
-import { useGetProfileQuery } from "../../gql/generated/schema";
+import { useGetProfileQuery, useLogoutUserMutation } from "../../gql/generated/schema";
 import "./Sidebar.scss";
 import { useNavigate } from "react-router-dom";
 import Modal from '@mui/material/Modal';
 import SearchBox from '../SearchBox/SearchBox';
+import client from "../../gql/client";
 
 interface SidebarProps {
   open: boolean;
@@ -24,18 +25,19 @@ interface SidebarProps {
 function Sidebar(props: SidebarProps) {
   const { open, onClose } = props;
   const [isModalOpen, setIsModalOpen] = useState(false); // Add this line
+  const [logoutUser] = useLogoutUserMutation();
+  
+
   const { data: currentUser } = useGetProfileQuery({
     errorPolicy: "ignore",
   });
   const navigate = useNavigate();
 
-  function handleModalOpen() {
-    setIsModalOpen(true);
-  }
-  
-  function handleModalClose() {
-    setIsModalOpen(false);
-  }
+  const logOut = async () => {
+    await logoutUser();
+    client.resetStore();
+    navigate("/");
+  };
 
   return (
     <Fragment>
@@ -47,13 +49,12 @@ function Sidebar(props: SidebarProps) {
             width: 240,
           },
         }}
-        variant="persistent"
+        variant="permanent"
         anchor="left"
         open={open}
         onClose={onClose}
       >
         <List>
-          <CloseIcon fontSize="large" onClick={() => onClose()} />
           <ListItem className="centered" onClick={onClose}>
             <ListItemIcon className="large-logo" />
           </ListItem>
@@ -74,7 +75,7 @@ function Sidebar(props: SidebarProps) {
             <ListItemIcon>
               <LogoutRoundedIcon />
             </ListItemIcon>
-            <ListItemText primary="Déconnection" />
+            <ListItemText onClick={logOut} primary="Déconnection" />
           </ListItem>
           {currentUser && (
             <ListItem button onClick={onClose}>
