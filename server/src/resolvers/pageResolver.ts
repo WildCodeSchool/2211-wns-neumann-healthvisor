@@ -1,7 +1,7 @@
 import { Resolver, Query, Arg, Mutation, Ctx, Authorized } from "type-graphql";
 import datasource from "../db";
 import boss from "../db-boss";
-import Page, { PageInput } from "../entity/Page";
+import Page, { PageInput, UpdatePageInput } from "../entity/Page";
 import History, { HistoryAnonymous } from "../entity/History";
 import { ApolloError } from "apollo-server-errors";
 import { ContextType } from "../index";
@@ -24,14 +24,14 @@ async function requestJob(job: Job) {
     result
   );
 
-  //screenshot: 
+  //screenshot:
   let screenshotPage: string = "none";
 
   if (result.status !== "inaccessible") {
     screenshotPage = await screenshot(page.url);
   }
 
-  // enregistrement db : 
+  // enregistrement db :
   const history = await datasource.getRepository(History).save({
     status: result.status,
     date: new Date(),
@@ -61,7 +61,7 @@ async function assignScheduledRequestTasks() {
     // Parcourir les tâches planifiées et assigner des travaux avec le handler approprié
     for (const schedule of filteredSchedules) {
       const { name } = schedule;
-      console.log(`Name: ${name} \n`,schedule);      
+      console.log(`Name: ${name} \n`, schedule);
       // Assigner un work
       await boss.work(name, options, requestJob);
     }
@@ -103,6 +103,49 @@ export class PageResolver {
     return await datasource.getRepository(Page).save(data);
   }
 
+  @Authorized()
+  @Mutation(() => Page)
+  async updatePage(
+    @Ctx() { currentUser }: ContextType,
+    @Arg("data") data: UpdatePageInput
+  ): Promise<Page> {
+    const page = await datasource.getRepository(Page).findOne({
+      where: { id: data.id },
+      relations: ["users"],
+    });
+
+    if(page){
+      const intervale = getCron(page.intervale);
+      if (intervale) {
+        await boss.schedule(
+          `r-${page?.id}`,
+          intervale,
+          { page, user: currentUser },
+          { tz: "Europe/Paris" }
+        );
+      } else {
+        throw new ApolloError(
+          "Intervale invalid",
+          "INTERVALE_ERROR"
+        );
+      }
+    } else {
+      throw new ApolloError(
+        "Page not found",
+        "PAGE_ERROR"
+      );
+    }
+
+    if (page?.users.find((u) => u.id === currentUser?.id)) {
+      return await datasource.getRepository(Page).save({ ...data });
+    } else {
+      throw new ApolloError(
+        "User can't access to this ressource",
+        "USER_ERROR"
+      );
+    }
+  }
+
   @Mutation(() => HistoryAnonymous)
   async getPage(@Arg("data") { url }: PageInput): Promise<HistoryAnonymous> {
     const axiosResult = await RequestPage(url);
@@ -130,7 +173,6 @@ export class PageResolver {
     @Ctx() { currentUser }: ContextType,
     @Arg("url") { url }: PageInput
   ): Promise<History> {
-
     if (typeof currentUser === "undefined")
       throw new ApolloError("User error", "USER_ERROR");
 
@@ -161,9 +203,8 @@ export class PageResolver {
     }
 
     const intervale = getCron(page.intervale);
-    if (!intervale)
-      throw new ApolloError("Interval error", "PARAM_ERROR");
-    
+    if (!intervale) throw new ApolloError("Interval error", "PARAM_ERROR");
+
     //pgboss
     const idString = page.id.toString();
     await boss.work(`r-${idString}`, options, requestJob);

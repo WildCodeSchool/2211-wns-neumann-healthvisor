@@ -28,19 +28,10 @@ export type History = {
 export type HistoryAnonymous = {
   __typename?: 'HistoryAnonymous';
   date: Scalars['DateTime'];
-  id: Scalars['Float'];
   responseTime: Scalars['Float'];
   screenshot: Scalars['String'];
   status: Scalars['String'];
   url: Scalars['String'];
-};
-
-export type HistoryInput = {
-  date: Scalars['DateTime'];
-  id: Scalars['Float'];
-  page: Scalars['Float'];
-  responseTime: Scalars['Float'];
-  status: Scalars['String'];
 };
 
 export type LoginInput = {
@@ -56,6 +47,9 @@ export type Mutation = {
   getPage: HistoryAnonymous;
   loginUser: Scalars['String'];
   logoutUser: Scalars['Boolean'];
+  sendNotification: Scalars['Boolean'];
+  updatePage: Page;
+  updateProfile: User;
 };
 
 
@@ -81,6 +75,28 @@ export type MutationGetPageArgs = {
 
 export type MutationLoginUserArgs = {
   data: LoginInput;
+};
+
+
+export type MutationSendNotificationArgs = {
+  data: NotificationInput;
+  userId: Scalars['Float'];
+};
+
+
+export type MutationUpdatePageArgs = {
+  data: UpdatePageInput;
+};
+
+
+export type MutationUpdateProfileArgs = {
+  data: UpdateUserInput;
+};
+
+export type NotificationInput = {
+  JSONPayload: Scalars['String'];
+  body: Scalars['String'];
+  title: Scalars['String'];
 };
 
 export type Page = {
@@ -134,9 +150,20 @@ export type SignUpInput = {
   password: Scalars['String'];
 };
 
+export type UpdatePageInput = {
+  id: Scalars['Float'];
+  intervale: Scalars['Float'];
+  url: Scalars['String'];
+};
+
+export type UpdateUserInput = {
+  expoNotificationToken: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   email: Scalars['String'];
+  expoNotificationToken: Scalars['String'];
   histories?: Maybe<Array<History>>;
   id: Scalars['Float'];
   name: Scalars['String'];
@@ -222,6 +249,13 @@ export type LogoutUserMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutUserMutation = { __typename?: 'Mutation', logoutUser: boolean };
+
+export type UpdatePageMutationVariables = Exact<{
+  data: UpdatePageInput;
+}>;
+
+
+export type UpdatePageMutation = { __typename?: 'Mutation', updatePage: { __typename?: 'Page', id: number, intervale: number, url: string } };
 
 
 export const AddPageToUserDocument = gql`
@@ -682,3 +716,38 @@ export function useLogoutUserMutation(baseOptions?: Apollo.MutationHookOptions<L
 export type LogoutUserMutationHookResult = ReturnType<typeof useLogoutUserMutation>;
 export type LogoutUserMutationResult = Apollo.MutationResult<LogoutUserMutation>;
 export type LogoutUserMutationOptions = Apollo.BaseMutationOptions<LogoutUserMutation, LogoutUserMutationVariables>;
+export const UpdatePageDocument = gql`
+    mutation UpdatePage($data: UpdatePageInput!) {
+  updatePage(data: $data) {
+    id
+    intervale
+    url
+  }
+}
+    `;
+export type UpdatePageMutationFn = Apollo.MutationFunction<UpdatePageMutation, UpdatePageMutationVariables>;
+
+/**
+ * __useUpdatePageMutation__
+ *
+ * To run a mutation, you first call `useUpdatePageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePageMutation, { data, loading, error }] = useUpdatePageMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdatePageMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePageMutation, UpdatePageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePageMutation, UpdatePageMutationVariables>(UpdatePageDocument, options);
+      }
+export type UpdatePageMutationHookResult = ReturnType<typeof useUpdatePageMutation>;
+export type UpdatePageMutationResult = Apollo.MutationResult<UpdatePageMutation>;
+export type UpdatePageMutationOptions = Apollo.BaseMutationOptions<UpdatePageMutation, UpdatePageMutationVariables>;

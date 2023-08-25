@@ -38,4 +38,18 @@ export class PageInput {
     url: string;
 }
 
+@InputType()
+export class UpdatePageInput {
+    @Field()
+    id: number;
+
+    @Field()
+    @MaxLength(200)
+    @MinLength(5)
+    url: string;
+
+    @Field()
+    intervale: number;
+}
+
 export default Page

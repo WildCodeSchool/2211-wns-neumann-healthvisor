@@ -8,6 +8,7 @@ import ListItemText from "@mui/material/ListItemText";
 import AccountBoxRoundedIcon from '@mui/icons-material/AccountBoxRounded';
 import HomeIcon from "@mui/icons-material/Home";
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+import DashboardIcon from '@mui/icons-material/Dashboard';
 import CloseIcon from "@mui/icons-material/Close";
 import { useGetProfileQuery, useLogoutUserMutation } from "../../gql/generated/schema";
 import "./Sidebar.scss";
@@ -58,27 +59,32 @@ function Sidebar(props: SidebarProps) {
           <ListItem className="centered" onClick={onClose}>
             <ListItemIcon className="large-logo" />
           </ListItem>
-          <ListItem button onClick={() => navigate("/")}>
+          <ListItem onClick={() => navigate("/")}>
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
             <ListItemText primary="Home" />
-
           </ListItem>
-          <ListItem button onClick={onClose}>
+          <ListItem onClick={() => navigate("/dashboard")}>
+            <ListItemIcon>
+              <DashboardIcon />
+            </ListItemIcon>
+            <ListItemText primary="Dashboard" />
+          </ListItem>
+          <ListItem onClick={onClose}>
             <ListItemIcon>
               <AccountBoxRoundedIcon />
             </ListItemIcon>
-            <ListItemText primary="Profle" />
+            <ListItemText primary="Profile" />
           </ListItem>
-          <ListItem button onClick={onClose}>
+          <ListItem onClick={onClose}>
             <ListItemIcon>
               <LogoutRoundedIcon />
             </ListItemIcon>
-            <ListItemText onClick={logOut} primary="Déconnection" />
+            <ListItemText onClick={logOut} primary="Déconnexion" />
           </ListItem>
           {currentUser && (
-            <ListItem button onClick={onClose}>
+            <ListItem onClick={onClose}>
               <ListItemText primary={`Welcome, ${currentUser.profile.name}`} />
             </ListItem>
           )}
@@ -86,7 +92,7 @@ function Sidebar(props: SidebarProps) {
 
         {/* <Modal
           open={isModalOpen}
-          onClose={handleModalClose}
+          // onClose={handleModalClose}
         >
           <SearchBox></SearchBox>
         </Modal> */}

@@ -1,0 +1,7 @@
+mutation UpdatePage($data: UpdatePageInput!) {
+  updatePage(data: $data) {
+    id
+    intervale
+    url
+  }
+}
